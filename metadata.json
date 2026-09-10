@@ -1,0 +1,7 @@
+{
+  "name": "Misinformation Containment System",
+  "description": "Multi-agent pipeline for rapid detection, origin tracing, graph spread prediction, and source-backed counter-narrative drafting within 90 seconds.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
