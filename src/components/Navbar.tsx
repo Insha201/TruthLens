@@ -22,11 +22,9 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'dashboard', label: 'Dashboard', icon: <Activity className="w-3.5 h-3.5" /> },
     { id: 'live_claims', label: 'Live Claims', icon: <Search className="w-3.5 h-3.5" /> },
     { id: 'investigation', label: 'Investigation', icon: <Search className="w-3.5 h-3.5" /> },
-    { id: 'agent_intelligence', label: 'Agents', icon: <Cpu className="w-3.5 h-3.5" /> },
     { id: 'spread_intelligence', label: 'Spread', icon: <GitBranch className="w-3.5 h-3.5" /> },
     { id: 'evidence_review', label: 'Evidence', icon: <FileText className="w-3.5 h-3.5" /> },
-    { id: 'counter_narrative', label: 'Narrative', icon: <FileText className="w-3.5 h-3.5" /> },
-    { id: 'status', label: 'System', icon: <Activity className="w-3.5 h-3.5" /> },
+    { id: 'counter_narrative', label: 'Counter-Narrative', icon: <FileText className="w-3.5 h-3.5" /> },
   ];
 
   return (

@@ -30,7 +30,28 @@ export const DashboardPage = ({
     return counts;
   }, [incidents]);
 
-  const bars = [18, 24, 16, 32, 28, 41, 36, 22, 30, 44, 38, 27];
+  /**
+   * Real activity histogram: claims bucketed by when their pipeline ran,
+   * taken from the first audit-event timestamp (falling back to the ingestion
+   * timestamp). Replaces a hardcoded array that ignored the data entirely.
+   */
+  const activity = useMemo(() => {
+    const buckets = range === '24h' ? 12 : range === '7d' ? 7 : 30;
+    const msPer = range === '24h' ? 2 * 3600_000 : 24 * 3600_000;
+    const now = Date.now();
+    const counts = new Array(buckets).fill(0);
+
+    for (const inc of incidents) {
+      const stamp = inc.auditTrail?.[0]?.timestamp || inc.ingestion.timestamp;
+      const at = Date.parse(stamp);
+      if (!Number.isFinite(at)) continue;
+      const idx = buckets - 1 - Math.floor((now - at) / msPer);
+      if (idx >= 0 && idx < buckets) counts[idx] += 1;
+    }
+    return { counts, max: Math.max(1, ...counts) };
+  }, [incidents, range]);
+
+  const inWindow = activity.counts.reduce((a, b) => a + b, 0);
 
   return (
     <div className="space-y-8">
@@ -71,21 +92,32 @@ export const DashboardPage = ({
               ))}
             </div>
           </div>
-          <div className="h-56 flex items-end gap-2">
-            {bars.map((h, i) => (
-              <div key={i} className="flex-1 bg-slate-800/80 rounded-t-md relative overflow-hidden h-full flex items-end">
+          {inWindow === 0 ? (
+            <div className="h-56 flex items-center justify-center text-sm text-slate-500">
+              No claims processed in the last {range === '24h' ? '24 hours' : range === '7d' ? '7 days' : '30 days'}.
+            </div>
+          ) : (
+            <div className="h-56 flex items-end gap-2">
+              {activity.counts.map((n, i) => (
                 <div
-                  className="w-full bg-gradient-to-t from-cyan-700 to-cyan-300 rounded-t-md"
-                  style={{ height: `${h + (range === '7d' ? 8 : range === '30d' ? 16 : 0)}%` }}
-                />
-              </div>
-            ))}
-          </div>
+                  key={i}
+                  className="flex-1 bg-slate-800/80 rounded-t-md h-full flex items-end"
+                  title={`${n} claim${n === 1 ? '' : 's'}`}
+                >
+                  <div
+                    className="w-full bg-gradient-to-t from-cyan-700 to-cyan-300 rounded-t-md transition-all"
+                    style={{ height: `${(n / activity.max) * 100}%` }}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
           <div className="flex justify-between text-[10px] text-slate-500 mt-2 font-mono">
-            <span>Detected</span>
-            <span>Investigations</span>
-            <span>High severity</span>
-            <span>Resolved</span>
+            <span>{range === '24h' ? '24h ago' : range === '7d' ? '7d ago' : '30d ago'}</span>
+            <span>
+              {inWindow} claim{inWindow === 1 ? '' : 's'} processed · peak {activity.max}
+            </span>
+            <span>now</span>
           </div>
         </div>
 
@@ -118,15 +150,25 @@ export const DashboardPage = ({
             return (
               <div key={inc.id} className={`rounded-xl border p-4 ${tone.border} ${tone.bg}`}>
                 <div className="flex justify-between text-xs font-bold uppercase tracking-widest">
-                  <span className={tone.text}>{sev} • {(inc.detector?.veracityScore ?? 0) / 10}/10</span>
+                  <span className={tone.text}>{sev} • veracity {inc.detector?.veracityScore ?? 0}/100</span>
                   <span className="text-slate-400">{STAGE_LABEL[inc.currentStage]}</span>
                 </div>
                 <p className="text-sm text-slate-100 mt-2 line-clamp-2">“{inc.title}”</p>
                 <div className="grid grid-cols-4 gap-2 mt-3 text-[10px] uppercase tracking-wider text-slate-400">
                   <span>Conf {inc.detector?.confidence ?? '—'}%</span>
-                  <span>Origin {inc.origin ? 'Traced' : '—'}</span>
+                  <span>
+                    Origin{' '}
+                    {inc.origin?.timeline?.length
+                      ? `${inc.origin.timeline.length} outlet${inc.origin.timeline.length === 1 ? '' : 's'}`
+                      : 'none'}
+                  </span>
                   <span>Spread {formatReach(inc.spread?.projected6hReachUncontained)}</span>
-                  <span>Evidence {inc.ragDrafter ? 'Verified' : 'Pending'}</span>
+                  <span>
+                    Evidence{' '}
+                    {inc.ragDrafter?.sources?.length
+                      ? `${inc.ragDrafter.sources.length} src`
+                      : 'none'}
+                  </span>
                 </div>
                 <div className="flex gap-2 mt-4">
                   <button

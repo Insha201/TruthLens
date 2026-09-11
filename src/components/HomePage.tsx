@@ -235,10 +235,10 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <span className="text-xs font-mono font-bold text-slate-400 dark:text-slate-500">LAYER 1</span>
               </div>
               <h3 className="font-bold text-slate-900 dark:text-white text-base sm:text-lg group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                Social Ingestion & Signal Extraction
+                Multi-Source Ingestion & Signal Extraction
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Continuous high-velocity crawlers monitoring X, Telegram, Reddit, TikTok, and WhatsApp network relays.
+                Live crawlers over NewsAPI, YouTube and RSS feeds, with X, Telegram, Reddit, TikTok and WhatsApp connectors staged behind API keys.
               </p>
             </div>
             <div className="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-sm font-mono font-bold text-indigo-600 dark:text-indigo-400">
@@ -361,7 +361,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <span>INGESTION CONSOLE</span>
           </div>
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 mt-2.5 leading-relaxed">
-            Submit custom raw tweets, Telegram broadcasts, or TikTok claims for instant autonomous containment.
+            Submit a raw news headline, video description, RSS item, or viral post for instant autonomous containment.
           </p>
         </button>
       </div>

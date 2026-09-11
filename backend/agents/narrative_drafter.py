@@ -1,15 +1,13 @@
 import os
 
 from dotenv import load_dotenv
-from groq import Groq
-from dataclasses import dataclass
+
+from llm import complete
+from dataclasses import dataclass, field
 from storage.vector_store import search_documents
+from text_utils import normalize_text
 
 load_dotenv()
-
-groq_client = Groq(
-    api_key=os.getenv("GROQ_API_KEY")
-)
 
 
 @dataclass
@@ -17,6 +15,8 @@ class NarrativeResult:
     narrative: str
     confidence: float
     status: str
+    sources: list = field(default_factory=list)      # RAG doc texts used
+    source_ids: list = field(default_factory=list)   # their Chroma ids
 
 
 def draft_narrative(claim: str) -> NarrativeResult:
@@ -28,6 +28,7 @@ def draft_narrative(claim: str) -> NarrativeResult:
     results = search_documents(claim, limit=3)
 
     documents = results.get("documents", [[]])[0]
+    document_ids = results.get("ids", [[]])[0]
 
     if not documents:
         return NarrativeResult(
@@ -61,21 +62,12 @@ Write a short, factual counter-narrative that:
 Return only the counter-narrative.
 """
 
-    response = groq_client.chat.completions.create(
-        model="openai/gpt-oss-20b",
-        messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        temperature=0
-    )
-
-    narrative = response.choices[0].message.content.strip()
+    narrative = normalize_text(complete(prompt))
 
     return NarrativeResult(
         narrative=narrative,
         confidence=0.8,
-        status="drafted"
+        status="drafted",
+        sources=list(documents),
+        source_ids=list(document_ids),
     )

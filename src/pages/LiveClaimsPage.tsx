@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { IncidentClaim, MainAppPage } from '../types';
+import { ClaimDomain, DOMAIN_LABELS, DOMAIN_ORDER, IncidentClaim, MainAppPage } from '../types';
 import { PageHeader } from '../components/ui/PageHeader';
 import { formatReach, reviewLabel, severityOf, severityTone, STAGE_LABEL } from '../lib/ui';
 
@@ -14,10 +14,12 @@ export const LiveClaimsPage = ({
   setPage: (p: MainAppPage) => void;
 }) => {
   const [filter, setFilter] = useState('ALL');
+  const [domain, setDomain] = useState<ClaimDomain | 'all'>('all');
   const chips = ['ALL', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'NEW', 'UNDER REVIEW', 'RESOLVED'];
 
   const filtered = useMemo(() => {
     return incidents.filter((inc) => {
+      if (domain !== 'all' && (inc.category || 'other') !== domain) return false;
       const sev = severityOf(inc);
       const review = reviewLabel(inc);
       if (filter === 'ALL') return true;
@@ -27,17 +29,48 @@ export const LiveClaimsPage = ({
       if (filter === 'RESOLVED') return review === 'Resolved';
       return true;
     });
-  }, [incidents, filter]);
+  }, [incidents, filter, domain]);
+
+  // How many claims sit in each domain, so the filter row shows real counts.
+  const domainCounts = useMemo(() => {
+    const m = new Map<ClaimDomain, number>();
+    for (const inc of incidents) {
+      const k = (inc.category || 'other') as ClaimDomain;
+      m.set(k, (m.get(k) ?? 0) + 1);
+    }
+    return m;
+  }, [incidents]);
 
   return (
     <div className="space-y-6">
       <PageHeader kicker="Monitor" title="Live Claim Monitor" live subtitle="Incoming claims with live severity, origin, and pipeline stage." />
-      <div className="flex flex-wrap gap-2">
-        {chips.map((c) => (
-          <button key={c} onClick={() => setFilter(c)} className={`filter-chip ${filter === c ? 'active' : ''}`}>
-            {c}
+      <div className="space-y-3">
+        <div className="flex flex-wrap gap-2 items-center">
+          <span className="text-[10px] uppercase tracking-widest text-slate-500 mr-1">Domain</span>
+          <button
+            onClick={() => setDomain('all')}
+            className={`filter-chip ${domain === 'all' ? 'active' : ''}`}
+          >
+            All ({incidents.length})
           </button>
-        ))}
+          {DOMAIN_ORDER.filter((d) => domainCounts.has(d)).map((d) => (
+            <button
+              key={d}
+              onClick={() => setDomain(d)}
+              className={`filter-chip ${domain === d ? 'active' : ''}`}
+            >
+              {DOMAIN_LABELS[d]} ({domainCounts.get(d)})
+            </button>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-2 items-center">
+          <span className="text-[10px] uppercase tracking-widest text-slate-500 mr-1">Status</span>
+          {chips.map((c) => (
+            <button key={c} onClick={() => setFilter(c)} className={`filter-chip ${filter === c ? 'active' : ''}`}>
+              {c}
+            </button>
+          ))}
+        </div>
       </div>
       <div className="grid gap-4">
         {filtered.length === 0 && (
@@ -52,6 +85,9 @@ export const LiveClaimsPage = ({
                 <div className="flex flex-wrap items-center gap-3 text-xs mb-2">
                   <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
                   <span className="font-mono text-slate-500">{inc.id}</span>
+                  <span className="px-2 py-0.5 rounded border border-slate-700 bg-slate-800/60 text-slate-300 uppercase tracking-widest">
+                    {DOMAIN_LABELS[(inc.category || 'other') as ClaimDomain]}
+                  </span>
                   <span className={`px-2 py-0.5 rounded border uppercase tracking-widest font-bold ${tone.text} ${tone.border} ${tone.bg}`}>
                     {sev}
                   </span>

@@ -9,7 +9,7 @@ import {
   Zap,
   Globe
 } from 'lucide-react';
-import { Platform } from '../types';
+import { Platform, INGESTION_SOURCES } from '../types';
 
 interface IngestModalProps {
   isOpen: boolean;
@@ -22,25 +22,25 @@ const PRESET_CLAIMS = [
   {
     title: 'Election Ballot Warehouse Hoax',
     category: 'elections_civic',
-    platform: 'x' as Platform,
+    platform: 'newsapi' as Platform,
     text: 'URGENT: Workers just caught on camera shredding over 45,000 pre-marked election ballots in Clark County recycling depot warehouse right now!! Media is in total blackout mode, share everywhere before taken down!',
   },
   {
     title: 'Emergency Dam Rupture Alarm',
     category: 'emergency_disaster',
-    platform: 'tiktok' as Platform,
+    platform: 'youtube' as Platform,
     text: 'BREAKING NEWS: Highland Valley Dam wall has collapsed following magnitude 4.1 tremor! Wall of water moving toward lower valley. Immediate emergency evacuation ordered by national guard!!',
   },
   {
     title: 'Central Bank Wire Freeze Hoax',
     category: 'financial_panic',
-    platform: 'reddit' as Platform,
+    platform: 'rss' as Platform,
     text: 'Leak from insider: Central Bank is shutting down all domestic wire transfers and regional bank withdrawals tonight at 00:00! Pull your cash immediately from ATMs before liquidity lock!',
   },
   {
     title: 'Contaminated Water / Vinegar Remedy',
     category: 'public_health',
-    platform: 'whatsapp' as Platform,
+    platform: 'x' as Platform,
     text: 'URGENT WARNING FROM MEDICAL NURSE: Municipal water supplies in city center have been poisoned with chemical fluoride flutters. Drink 2 tablespoons of concentrated vinegar immediately to neutralize toxins in your bloodstream!!',
   },
 ];
@@ -52,7 +52,7 @@ export const IngestModal: React.FC<IngestModalProps> = ({
   isProcessing,
 }) => {
   const [claimText, setClaimText] = useState('');
-  const [platform, setPlatform] = useState<Platform>('x');
+  const [platform, setPlatform] = useState<Platform>('newsapi');
   const [category, setCategory] = useState('elections_civic');
 
   if (!isOpen) return null;
@@ -79,10 +79,10 @@ export const IngestModal: React.FC<IngestModalProps> = ({
             </div>
             <div>
               <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                Ingest Viral Social Claim into 90s Pipeline
+                Ingest a Claim
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-400">
-                Dispatches claim through Detector, Origin Tracer, Graph Spread Predictor & RAG Drafter.
+                Runs Detector, Origin Tracer, Spread Predictor and RAG Drafter, then stores the result.
               </p>
             </div>
           </div>
@@ -97,7 +97,7 @@ export const IngestModal: React.FC<IngestModalProps> = ({
         {/* Presets Strip */}
         <div>
           <label className="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-2">
-            Quick-Load High-Velocity Breaking Incident Presets:
+            Example claims:
           </label>
           <div className="grid grid-cols-2 gap-2">
             {PRESET_CLAIMS.map((preset, idx) => (
@@ -118,29 +118,41 @@ export const IngestModal: React.FC<IngestModalProps> = ({
           </div>
         </div>
 
+        <div className="rounded-md border border-slate-700 bg-slate-950/60 p-2.5 text-[11px] text-slate-400">
+          A hand-typed claim has no source URL, so the Origin Tracer cannot build a
+          provenance chain for it — it will show <span className="font-mono">no outlet recorded</span>.
+          The source label and category below are hints; the Claim Detector classifies
+          the category itself from the text.
+        </div>
+
         {/* Custom Input Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-[11px] font-mono text-slate-600 dark:text-slate-400 block mb-1">
-                Source Social Platform:
+                Label as source:
               </label>
               <select
                 value={platform}
                 onChange={(e) => setPlatform(e.target.value as Platform)}
                 className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:border-cyan-500"
               >
-                <option value="x">X (formerly Twitter)</option>
-                <option value="telegram">Telegram Broadcast Channel</option>
-                <option value="reddit">Reddit Discussion Forum</option>
-                <option value="tiktok">TikTok Video Stream</option>
-                <option value="whatsapp">WhatsApp Forwarding Network</option>
+                <optgroup label="Live sources">
+                  {INGESTION_SOURCES.filter((s) => s.status === 'live').map((s) => (
+                    <option key={s.id} value={s.id}>{s.label}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Staged connectors (need API key)">
+                  {INGESTION_SOURCES.filter((s) => s.status === 'planned').map((s) => (
+                    <option key={s.id} value={s.id}>{s.label} — connector staged</option>
+                  ))}
+                </optgroup>
               </select>
             </div>
 
             <div>
               <label className="text-[11px] font-mono text-slate-600 dark:text-slate-400 block mb-1">
-                Category Domain:
+                Category hint:
               </label>
               <select
                 value={category}
@@ -158,12 +170,12 @@ export const IngestModal: React.FC<IngestModalProps> = ({
 
           <div>
             <label className="text-[11px] font-mono text-slate-600 dark:text-slate-400 block mb-1">
-              Raw Social Post / Headline Text:
+              Raw Post / Article / Transcript Text:
             </label>
             <textarea
               rows={4}
               required
-              placeholder="Paste viral tweet, Telegram forward, Reddit post title, or breaking rumor..."
+              placeholder="Paste a news headline, YouTube description, RSS item, or viral post..."
               value={claimText}
               onChange={(e) => setClaimText(e.target.value)}
               className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 font-sans leading-relaxed"
@@ -173,7 +185,7 @@ export const IngestModal: React.FC<IngestModalProps> = ({
           <div className="pt-2 flex items-center justify-between">
             <div className="flex items-center space-x-1.5 text-[11px] font-mono text-slate-500 dark:text-slate-400">
               <Zap className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
-              <span>Multi-agent execution budget: &le; 90 seconds</span>
+              <span>Typical run: 2-10s (longer if the LLM is rate-limited)</span>
             </div>
 
             <div className="flex items-center space-x-2">
@@ -193,12 +205,12 @@ export const IngestModal: React.FC<IngestModalProps> = ({
                 {isProcessing ? (
                   <>
                     <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>Executing Pipeline...</span>
+                    <span>Running pipeline...</span>
                   </>
                 ) : (
                   <>
                     <Send className="w-4 h-4" />
-                    <span>Launch 90s Multi-Agent Pipeline</span>
+                    <span>Run pipeline</span>
                   </>
                 )}
               </button>

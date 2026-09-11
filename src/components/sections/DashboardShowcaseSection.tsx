@@ -12,8 +12,8 @@ export const DashboardShowcaseSection: React.FC<DashboardShowcaseSectionProps> =
   const claims = [
     {
       id: 'CLM-9082',
-      platform: 'X (Twitter)',
-      author: '@viral_news_daily',
+      platform: 'NewsAPI',
+      author: 'thefreepressjournal.in',
       claimText: 'Emergency warning: Water supply in Region 4 contaminated with synthetic chemicals.',
       confidence: 0.94,
       severity: 9,
@@ -24,8 +24,8 @@ export const DashboardShowcaseSection: React.FC<DashboardShowcaseSectionProps> =
     },
     {
       id: 'CLM-9083',
-      platform: 'Telegram',
-      author: '@global_insights_ch',
+      platform: 'YouTube',
+      author: 'Global Insights Channel',
       claimText: 'Central bank announces immediate replacement of paper currency next week.',
       confidence: 0.86,
       severity: 6,
@@ -36,8 +36,8 @@ export const DashboardShowcaseSection: React.FC<DashboardShowcaseSectionProps> =
     },
     {
       id: 'CLM-9084',
-      platform: 'Reddit',
-      author: 'u/conspiracy_hub',
+      platform: 'RSS Feed',
+      author: 'Snopes',
       claimText: 'New satellite images show hidden facility built overnight in desert.',
       confidence: 0.72,
       severity: 4,

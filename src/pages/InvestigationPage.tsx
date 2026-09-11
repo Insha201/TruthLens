@@ -62,8 +62,35 @@ export const InvestigationPage = ({
               <p>Earliest source: <span className="text-white">{currentIncident.origin.patientZero.username}</span></p>
               <p>Platform: {currentIncident.origin.patientZero.platform}</p>
               <p>First seen: {currentIncident.origin.patientZero.firstSeenTimestamp}</p>
-              <p>Origin confidence: {100 - currentIncident.origin.patientZero.botProbability + 8}%</p>
+              <p>Origin confidence: {Math.max(0, 100 - currentIncident.origin.patientZero.botProbability)}%</p>
               <p className="text-amber-300">{currentIncident.origin.patientZero.geographicCluster}</p>
+              {currentIncident.origin.summary && (
+                <p className="text-slate-400 border-l-2 border-slate-700 pl-3 mt-3">{currentIncident.origin.summary}</p>
+              )}
+              {currentIncident.origin.aliases?.length ? (
+                <div className="mt-3">
+                  <div className="text-[10px] uppercase tracking-widest text-slate-500 mb-1">
+                    Also reported as ({currentIncident.origin.aliases.length} merged wording
+                    {currentIncident.origin.aliases.length === 1 ? '' : 's'})
+                  </div>
+                  <ul className="text-xs text-slate-400 space-y-0.5">
+                    {currentIncident.origin.aliases.map((a, i) => (
+                      <li key={i}>• “{a}”</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+              {currentIncident.origin.timeline && currentIncident.origin.timeline.length > 1 && (
+                <ol className="mt-3 space-y-1 text-xs font-mono text-slate-400">
+                  {currentIncident.origin.timeline.map((t, i) => (
+                    <li key={i}>
+                      <span className="text-cyan-300">{i === 0 ? 'origin' : `+${i}`}</span>{' '}
+                      {t.outlet} <span className="text-slate-600">[{t.platform}]</span>{' '}
+                      {t.timestamp || 'no timestamp'}
+                    </li>
+                  ))}
+                </ol>
+              )}
             </div>
           ) : (
             <p className="text-sm text-cyan-400/80">Tracing origin…</p>
@@ -78,7 +105,9 @@ export const InvestigationPage = ({
             <div>
               <h3 className="font-bold">Spread prediction</h3>
               <p className="text-xs text-slate-500">
-                Risk {currentIncident.spread ? 'HIGH' : '—'} · Predicted reach {formatReach(currentIncident.spread?.projected6hReachUncontained)}
+                {currentIncident.spread
+                  ? `R0 ${currentIncident.spread.r0ViralFactor} · ~${formatReach(currentIncident.spread.currentReach)} reached · 6h projection ${formatReach(currentIncident.spread.projected6hReachUncontained)}${currentIncident.spread.reductionPercentage ? ` (−${currentIncident.spread.reductionPercentage}% if contained)` : ''}`
+                  : 'Risk — · Predicted reach —'}
               </p>
             </div>
           </div>

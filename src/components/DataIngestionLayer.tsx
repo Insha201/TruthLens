@@ -12,7 +12,11 @@ import {
   ExternalLink,
   MessageSquare
 } from 'lucide-react';
-import { IncidentClaim, Platform } from '../types';
+import { IncidentClaim, INGESTION_SOURCES } from '../types';
+
+const LIVE_SOURCES = INGESTION_SOURCES.filter((s) => s.status === 'live');
+const PLANNED_SOURCES = INGESTION_SOURCES.filter((s) => s.status === 'planned');
+const LIVE_STRIP = LIVE_SOURCES.map((s) => s.shortLabel).join(', ');
 
 interface DataIngestionLayerProps {
   incidents: IncidentClaim[];
@@ -46,11 +50,13 @@ export const DataIngestionLayer: React.FC<DataIngestionLayerProps> = ({
               <Layers className="w-4 h-4" />
             </span>
             <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-              Layer 1: Social Media Data Ingestion & Signal Extraction
+              Layer 1: Multi-Source Data Ingestion & Signal Extraction
             </h2>
           </div>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
-            Real-time multi-platform stream listener monitoring X, Telegram, Reddit, TikTok, and WhatsApp network relays.
+            Live crawlers pulling from {LIVE_SOURCES.map((s) => s.label).join(', ')}.{' '}
+            {PLANNED_SOURCES.map((s) => s.label).join(', ')} connectors are staged &mdash; add each API key in{' '}
+            <code className="font-mono text-[11px] px-1 rounded bg-slate-100 dark:bg-slate-800">backend/.env</code> to enable.
           </p>
         </div>
 
@@ -80,9 +86,9 @@ export const DataIngestionLayer: React.FC<DataIngestionLayerProps> = ({
         <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-4 rounded-xl transition-colors">
           <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400">ACTIVE INGESTION CRAWLERS</div>
           <div className="text-2xl font-bold text-cyan-600 dark:text-cyan-400 mt-1">
-            5 Platforms
+            {LIVE_SOURCES.length} Live <span className="text-xs font-normal text-slate-500 dark:text-slate-400">· {PLANNED_SOURCES.length} Staged</span>
           </div>
-          <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 font-mono">X, TG, Reddit, TikTok, WA</p>
+          <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 font-mono">{LIVE_STRIP}</p>
         </div>
 
         <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-4 rounded-xl transition-colors">
@@ -106,18 +112,32 @@ export const DataIngestionLayer: React.FC<DataIngestionLayerProps> = ({
       <div className="bg-white/90 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 p-3 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs transition-colors">
         <div className="flex items-center space-x-2">
           <Filter className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-          <span className="text-slate-500 dark:text-slate-400 font-mono">Filter Platform:</span>
-          {['all', 'x', 'telegram', 'reddit', 'tiktok', 'whatsapp'].map((plat) => (
+          <span className="text-slate-500 dark:text-slate-400 font-mono">Filter Source:</span>
+          <button
+            onClick={() => setPlatformFilter('all')}
+            className={`px-2.5 py-1 rounded text-xs font-mono uppercase transition-colors ${
+              platformFilter === 'all'
+                ? 'bg-cyan-100 dark:bg-cyan-950 text-cyan-800 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-700 font-semibold'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+            }`}
+          >
+            all
+          </button>
+          {INGESTION_SOURCES.map((src) => (
             <button
-              key={plat}
-              onClick={() => setPlatformFilter(plat)}
+              key={src.id}
+              onClick={() => setPlatformFilter(src.id)}
+              title={`${src.label}${src.status === 'planned' ? ' — connector staged' : ''}`}
               className={`px-2.5 py-1 rounded text-xs font-mono uppercase transition-colors ${
-                platformFilter === plat
+                platformFilter === src.id
                   ? 'bg-cyan-100 dark:bg-cyan-950 text-cyan-800 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-700 font-semibold'
+                  : src.status === 'planned'
+                  ? 'text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
-              {plat}
+              {src.shortLabel}
+              {src.status === 'planned' && <span className="ml-1 text-[8px] align-top opacity-60">soon</span>}
             </button>
           ))}
         </div>

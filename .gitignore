@@ -1,2 +1,37 @@
-venv/ 
-backend/.env 
+# --- Secrets: never commit these ---
+.env
+backend/.env
+*.session
+*.session-journal
+
+# --- Python ---
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# --- Node / build output ---
+node_modules/
+dist/
+*.tsbuildinfo
+
+# --- Local data stores (regenerate with the seeders) ---
+backend/chroma_db/
+chroma_db/
+
+# --- Editor / OS ---
+.vscode/
+.DS_Store
+Thumbs.db
+
+# --- Scratch files from development ---
+build_error*.txt
+dates*.txt
+doc_content.xml
+doc_text*.txt
+ui_doc.zip
+ui_doc_extracted/
+setup_*.cjs
+setup_*.js
+truthlens-site/
