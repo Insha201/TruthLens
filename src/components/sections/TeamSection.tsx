@@ -4,30 +4,11 @@ import { Users, Linkedin, Twitter, Github } from 'lucide-react';
 
 export const TeamSection: React.FC = () => {
   const team = [
-    {
-      name: 'Dr. Elena Rostova',
-      role: 'Lead AI & Graph Neural Systems',
-      bio: 'Ex-DeepMind researcher specializing in GNN network topology and automated claim detection.',
-      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
-    },
-    {
-      name: 'Marcus Vance',
-      role: 'Chief Architect — Multi-Agent Engineering',
-      bio: 'Distributed systems engineer focusing on LangGraph state orchestration and ultra-low-latency Groq integration.',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-    },
-    {
-      name: 'Aisha Patel',
-      role: 'Head of RAG & Trust Alignment',
-      bio: 'Expert in vector database grounding, source attribution metrics, and zero-hallucination guardrails.',
-      avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80',
-    },
-    {
-      name: 'Julian Thorne',
-      role: 'Principal Front-End & UX Engineer',
-      bio: 'Crafting award-winning interactive interfaces for complex AI intelligence systems.',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-    },
+    // Filenames contain spaces, so they are percent-encoded for the URL.
+    { name: 'Hajra Khan', role: 'Team Leader', avatar: '/team/Hajra%20Khan.jpeg' },
+    { name: 'Insha Ansari', role: '', avatar: '/team/Insha%20Ansari.jpeg' },
+    { name: 'Shifa Shaikh', role: '', avatar: '/team/Shifa%20Shaikh.jpeg' },
+    { name: 'Bushra Kazi', role: '', avatar: '/team/Bushra%20Kazi.jpeg' },
   ];
 
   return (
@@ -62,7 +43,7 @@ export const TeamSection: React.FC = () => {
             transition={{ delay: 0.2 }}
             className="font-editorial text-lg text-[#9AA3B2]"
           >
-            A multidisciplinary team of AI researchers, graph theorists, and front-end creative engineers.
+            The four of us who built TruthLens.
           </motion.p>
         </div>
 
@@ -85,11 +66,10 @@ export const TeamSection: React.FC = () => {
                 />
                 <div>
                   <h3 className="font-sans-display text-xl font-bold text-[#F5F6FA]">{member.name}</h3>
-                  <div className="text-xs font-mono text-[#17C3A0] mt-0.5">{member.role}</div>
+                  {member.role && (
+                    <div className="text-xs font-mono text-[#17C3A0] mt-0.5">{member.role}</div>
+                  )}
                 </div>
-                <p className="font-editorial text-xs text-[#9AA3B2] leading-relaxed">
-                  {member.bio}
-                </p>
               </div>
 
               <div className="flex items-center gap-3 pt-3 border-t border-white/10 text-[#9AA3B2]">

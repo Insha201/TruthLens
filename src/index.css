@@ -23,6 +23,16 @@
 }
 
 :root {
+  /* App-shell surface tokens. These were referenced by the app navbar
+     (bg-[var(--bg-surface)]) but never declared anywhere. */
+  --bg-surface: #0B0E14;
+  --border-subtle: rgba(245, 246, 250, 0.10);
+
+  /* Page surface tokens. Dark values are the originals; html.light
+     overrides only these two, so the base rules never need duplicating. */
+  --page-bg: #0A0F1E;
+  --page-fg: #F5F6FA;
+
   --bg-dark: #0A0F1E;
   --bg-dark-sec: #0B0E14;
   --text-primary: #F5F6FA;
@@ -33,16 +43,16 @@
 
 html {
   scroll-behavior: smooth;
-  background-color: #0A0F1E;
-  color: #F5F6FA;
+  background-color: var(--page-bg);
+  color: var(--page-fg);
   font-family: "Playfair Display", Georgia, serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background-color: #0A0F1E;
-  color: #F5F6FA;
+  background-color: var(--page-bg);
+  color: var(--page-fg);
   overflow-x: hidden;
   margin: 0;
   padding: 0;
@@ -69,6 +79,17 @@ body {
 }
 .font-editorial {
   font-family: "Playfair Display", Georgia, serif;
+}
+/* Used only by the hero subtitle. Not a global font change. */
+.font-gideon {
+  font-family: "Gideon Roman", "Playfair Display", Georgia, serif;
+}
+/* Hero tagline only. Display-optical serif: characterful but readable at
+   large sizes, unlike the calligraphic script it replaces. */
+.font-hero-accent {
+  font-family: "Fraunces", "Playfair Display", Georgia, serif;
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 40, "WONK" 1;
 }
 .font-sans-display {
   font-family: "Inter", system-ui, -apple-system, sans-serif;
@@ -161,3 +182,231 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* =====================================================================
+   LIGHT THEME
+   Scoped entirely to `html.light`, so the dark theme is byte-for-byte
+   unchanged. Colours come from the tokens below rather than being repeated.
+
+   The landing page bakes colours into Tailwind class names
+   (text-[#F5F6FA], bg-[#17C3A0]/10 ...). Those cannot be re-pointed with a
+   variable, so each SOLID utility is remapped by attribute match. Alpha
+   variants (the `/10`, `/30` suffixes) are deliberately EXCLUDED via
+   :not(...) - overriding those collapsed translucent tints into solid fills,
+   which is what turned the hero badge and buttons into flat blocks.
+   ===================================================================== */
+
+html.light {
+  /* surfaces */
+  --l-bg:            #F7F9FC;
+  --l-bg-elevated:   #FFFFFF;
+  --l-bg-sunken:     #EEF2F8;
+  /* text */
+  --l-text:          #0F1B2D;
+  --l-text-muted:    #55607A;
+  --l-text-inverse:  #FFFFFF;
+  /* accents (darkened for AA contrast on white) */
+  --l-accent:        #0E8F74;
+  --l-accent-bright: #12A883;
+  --l-alert:         #D93A2E;
+  --l-warn:          #C96A16;
+  /* lines + shadow */
+  --l-border:        rgba(15, 27, 45, 0.12);
+  --l-border-strong: rgba(15, 27, 45, 0.18);
+  --l-shadow:        rgba(15, 27, 45, 0.10);
+}
+
+html.light {
+  --page-bg: #F7F9FC;
+  --page-fg: #0F1B2D;
+  --bg-surface: #FFFFFF;
+  --border-subtle: rgba(15, 27, 45, 0.12);
+}
+
+html,
+body {
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+html.light ::-webkit-scrollbar-track { background: var(--l-bg-sunken); }
+html.light ::-webkit-scrollbar-thumb { background: rgba(14, 143, 116, 0.35); }
+html.light ::selection { background: var(--l-accent); color: var(--l-text-inverse); }
+
+/* --- Cards -------------------------------------------------------- */
+html.light .feed-glass-card {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid var(--l-border);
+  box-shadow: 0 14px 38px var(--l-shadow);
+}
+html.light .feed-glass-card:hover {
+  border-color: rgba(14, 143, 116, 0.42);
+  box-shadow: 0 18px 46px rgba(14, 143, 116, 0.14);
+}
+html.light .premium-card {
+  background: var(--l-bg-elevated);
+  border: 1px solid var(--l-border);
+  box-shadow: 0 2px 12px -2px var(--l-shadow);
+}
+html.light .premium-card:hover {
+  border-color: rgba(14, 143, 116, 0.42);
+  box-shadow: 0 8px 26px -4px rgba(14, 143, 116, 0.16);
+}
+
+html.light .text-gradient-trust { background: linear-gradient(135deg, var(--l-text) 0%, var(--l-accent) 100%); }
+html.light .text-gradient-alert { background: linear-gradient(135deg, var(--l-alert) 0%, var(--l-text) 100%); }
+
+html.light .status-green { color: var(--l-accent); }
+html.light .status-cyan  { color: var(--l-accent-bright); }
+html.light .status-red   { color: var(--l-alert); }
+
+html.light .glow-trust { box-shadow: 0 0 22px rgba(14, 143, 116, 0.18); }
+html.light .glow-alert { box-shadow: 0 0 22px rgba(217, 58, 46, 0.16); }
+
+/* --- Landing palette remap: SOLID utilities only ------------------- */
+/* text */
+html.light [class*="text-[#F5F6FA]"]:not([class*="text-[#F5F6FA]/"]) { color: var(--l-text); }
+html.light [class*="text-[#9AA3B2]"]:not([class*="text-[#9AA3B2]/"]) { color: var(--l-text-muted); }
+html.light [class*="text-[#17C3A0]"]:not([class*="text-[#17C3A0]/"]) { color: var(--l-accent); }
+html.light [class*="text-[#2EE6A6]"]:not([class*="text-[#2EE6A6]/"]) { color: var(--l-accent-bright); }
+html.light [class*="text-[#FF5A4E]"]:not([class*="text-[#FF5A4E]/"]) { color: var(--l-alert); }
+html.light [class*="text-[#FF8C42]"]:not([class*="text-[#FF8C42]/"]) { color: var(--l-warn); }
+/* this one only ever sits on an accent-filled button */
+html.light [class*="text-[#0A0F1E]"]:not([class*="text-[#0A0F1E]/"]) { color: var(--l-text-inverse); }
+
+/* backgrounds. Surface colours flip even in their alpha forms (a
+   translucent DARK panel must become a translucent LIGHT panel, e.g. the
+   sticky header at bg-[#0A0F1E]/60). Accent alphas below are left alone. */
+html.light [class*="bg-[#0A0F1E]/"] { background-color: rgba(255, 255, 255, 0.72); }
+html.light [class*="bg-[#0B0E14]/"] { background-color: rgba(255, 255, 255, 0.78); }
+html.light [class*="bg-[#0A0F1E]"]:not([class*="bg-[#0A0F1E]/"]) { background-color: var(--l-bg); }
+html.light [class*="bg-[#0B0E14]"]:not([class*="bg-[#0B0E14]/"]) { background-color: var(--l-bg-sunken); }
+html.light [class*="bg-[#F5F6FA]"]:not([class*="bg-[#F5F6FA]/"]) { background-color: var(--l-text); }
+html.light [class*="bg-[#17C3A0]"]:not([class*="bg-[#17C3A0]/"]) { background-color: var(--l-accent); }
+html.light [class*="bg-[#2EE6A6]"]:not([class*="bg-[#2EE6A6]/"]) { background-color: var(--l-accent-bright); }
+html.light [class*="bg-[#FF5A4E]"]:not([class*="bg-[#FF5A4E]/"]) { background-color: var(--l-alert); }
+html.light [class*="bg-[#FF8C42]"]:not([class*="bg-[#FF8C42]/"]) { background-color: var(--l-warn); }
+
+/* borders */
+html.light [class*="border-[#F5F6FA]"]:not([class*="border-[#F5F6FA]/"]) { border-color: var(--l-border-strong); }
+html.light [class*="border-[#9AA3B2]"]:not([class*="border-[#9AA3B2]/"]) { border-color: var(--l-border-strong); }
+html.light [class*="border-[#17C3A0]"]:not([class*="border-[#17C3A0]/"]) { border-color: rgba(14, 143, 116, 0.45); }
+html.light [class*="border-[#FF5A4E]"]:not([class*="border-[#FF5A4E]/"]) { border-color: rgba(217, 58, 46, 0.45); }
+html.light [class*="border-[#0A0F1E]"]:not([class*="border-[#0A0F1E]/"]) { border-color: var(--l-border); }
+
+html.light [class*="decoration-[#17C3A0]"] { text-decoration-color: var(--l-accent); }
+
+/* --- white/* utilities: these read as "subtle contrast against a dark
+   surface". On light they must flip to dark-alpha or they vanish. ---- */
+html.light [class*="border-white/"] { border-color: var(--l-border); }
+html.light [class*="bg-white/"]     { background-color: rgba(15, 27, 45, 0.035); }
+html.light [class*="text-white/"]   { color: var(--l-text-muted); }
+html.light [class*="hover:bg-white/"]:hover { background-color: rgba(15, 27, 45, 0.06); }
+html.light [class*="divide-white/"] > * + * { border-color: var(--l-border); }
+
+/* the canvas already paints a light wash; keep it behind content */
+html.light canvas { opacity: 0.9; }
+
+/* smooth the switch without touching component transitions */
+html.light .feed-glass-card,
+html.light .premium-card {
+  transition: background-color 0.35s ease, border-color 0.35s ease,
+              box-shadow 0.35s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- App pages -----------------------------------------------------
+   Much of the operator UI uses bare slate-* utilities with no `dark:`
+   prefix, i.e. dark-theme colours applied unconditionally: chart bars,
+   card fills, borders and light-on-dark text. Tailwind's `dark:` variants
+   compile to `.dark ...` selectors and produce their own class names, so
+   remapping the bare classes here cannot affect them.
+   ------------------------------------------------------------------ */
+
+/* surfaces that were dark fills */
+html.light .bg-slate-950 { background-color: var(--l-bg-sunken); }
+html.light .bg-slate-925 { background-color: var(--l-bg-sunken); }
+html.light .bg-slate-900 { background-color: var(--l-bg-elevated); }
+html.light .bg-slate-850 { background-color: var(--l-bg-sunken); }
+html.light .bg-slate-800 { background-color: #DDE3ED; }
+
+/* borders */
+html.light .border-slate-950,
+html.light .border-slate-900,
+html.light .border-slate-800 { border-color: var(--l-border); }
+html.light .border-slate-700,
+html.light .border-slate-600 { border-color: var(--l-border-strong); }
+
+/* text that was light-on-dark must become dark-on-light */
+html.light .text-slate-100,
+html.light .text-slate-200 { color: var(--l-text); }
+html.light .text-slate-300 { color: #1E2A40; }
+html.light .text-slate-400 { color: var(--l-text-muted); }
+/* slate-500/600 already read fine on a light surface - left alone */
+
+/* accent text tuned for white backgrounds */
+html.light .text-cyan-300,
+html.light .text-cyan-400 { color: var(--l-accent); }
+html.light .bg-cyan-600 { background-color: var(--l-accent); }
+html.light .bg-cyan-950,
+html.light .bg-cyan-950\/60 { background-color: rgba(14, 143, 116, 0.10); }
+html.light .border-cyan-700,
+html.light .border-cyan-500\/40,
+html.light .border-cyan-400\/50 { border-color: rgba(14, 143, 116, 0.45); }
+
+html.light .text-rose-300,
+html.light .text-rose-400 { color: var(--l-alert); }
+html.light .bg-rose-950 { background-color: rgba(217, 58, 46, 0.08); }
+html.light .border-rose-700,
+html.light .border-rose-800 { border-color: rgba(217, 58, 46, 0.35); }
+
+html.light .text-emerald-300,
+html.light .text-emerald-400 { color: var(--l-accent); }
+html.light .bg-emerald-600 { background-color: var(--l-accent); }
+html.light .bg-emerald-950 { background-color: rgba(14, 143, 116, 0.10); }
+html.light .border-emerald-800 { border-color: rgba(14, 143, 116, 0.35); }
+
+html.light .text-amber-300 { color: var(--l-warn); }
+html.light .bg-amber-950 { background-color: rgba(201, 106, 22, 0.10); }
+html.light .border-amber-800 { border-color: rgba(201, 106, 22, 0.35); }
+
+/* alpha-suffixed dark surfaces (e.g. bg-slate-900/80) */
+html.light [class*="bg-slate-950/"],
+html.light [class*="bg-slate-900/"] { background-color: rgba(255, 255, 255, 0.85); }
+html.light [class*="bg-slate-800/"] { background-color: rgba(15, 27, 45, 0.06); }
+html.light [class*="border-slate-800/"],
+html.light [class*="border-slate-700/"] { border-color: var(--l-border); }
+
+/* Bare `text-white` is used both for headings on dark surfaces AND as the
+   label on filled accent buttons. Flip the former, keep the latter: if the
+   same element also sets an accent/dark background, white is intentional. */
+html.light .text-white:not([class*="bg-emerald-"]):not([class*="bg-cyan-"]):not([class*="bg-rose-"]):not([class*="bg-amber-"]):not([class*="bg-slate-8"]):not([class*="bg-slate-9"]):not([class*="bg-[#"]) {
+  color: var(--l-text);
+}
+html.light .border-white { border-color: var(--l-border-strong); }
+
+/* `bg-white` cards already read correctly as elevated surfaces on the
+   off-white page background, so they are deliberately left alone. */
+
+/* --- Charts -------------------------------------------------------
+   The dashboard histogram and the severity meters rely on dark-surface
+   tracks and a neon gradient fill; both wash out on white. Give them a
+   visible track and a stronger teal ramp in light mode.
+   ------------------------------------------------------------------ */
+
+/* histogram track (bg-slate-800/80) */
+html.light .h-56 > .bg-slate-800\/80,
+html.light [class*="bg-slate-800/"] { background-color: #DFE5EE; }
+
+/* histogram fill (bg-gradient-to-t from-cyan-700 to-cyan-300) */
+html.light .bg-gradient-to-t.from-cyan-700 {
+  background-image: linear-gradient(to top, #0B7F67, #2FBF9E);
+}
+
+/* severity meter tracks (bg-slate-800) */
+html.light .h-2.bg-slate-800,
+html.light .rounded-full.bg-slate-800 { background-color: #DFE5EE; }
+
+/* severity meter fills - the *-500 bars need to stay saturated on white */
+html.light .bg-rose-500    { background-color: #DC2626; }
+html.light .bg-amber-500   { background-color: #D97706; }
+html.light .bg-cyan-500    { background-color: var(--l-accent); }
+html.light .bg-emerald-500 { background-color: #059669; }

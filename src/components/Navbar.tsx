@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { MainAppPage, SystemMetrics } from '../types';
-import { Activity, Cpu, FileText, GitBranch, Menu, Play, Search, ShieldAlert, X } from 'lucide-react';
+import { Activity, FileText, GitBranch, Menu, Moon, Play, Search, Sun, X } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 interface NavbarProps {
   activePage: MainAppPage;
@@ -32,16 +33,22 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-3">
           <button className="flex items-center gap-3 group" onClick={() => setActivePage('home')}>
-            <div className="w-10 h-10 rounded-lg bg-[#1c140a] border border-cyan-400/50 flex items-center justify-center shadow-[0_0_18px_rgba(212,165,76,0.22)]">
-              <ShieldAlert className="w-5 h-5 text-cyan-300" />
+            <div className="relative flex items-center justify-center">
+              <img
+                src="/logo.png"
+                alt="TruthLens Logo"
+                className="w-9 h-9 md:w-10 md:h-10 object-contain drop-shadow-[0_0_12px_rgba(23,195,160,0.4)] group-hover:scale-105 transition-transform"
+              />
+              <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-[#17C3A0] rounded-full animate-ping opacity-75" />
+              <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-[#17C3A0] rounded-full" />
             </div>
-            <div className="text-left">
-              <div className="font-extrabold text-[13px] tracking-[0.14em] text-slate-100 uppercase leading-none">
-                Misinfo Containment
-              </div>
-              <div className="text-[10px] text-cyan-400/80 tracking-[0.18em] uppercase mt-1 font-medium">
-                Multi-agent intelligence
-              </div>
+            <div className="text-left flex flex-col">
+              <span className="font-editorial text-xl md:text-2xl font-bold tracking-tight text-[#F5F6FA] group-hover:text-[#17C3A0] transition-colors leading-none">
+                TruthLens
+              </span>
+              <span className="text-[9px] font-sans-display tracking-[0.2em] text-[#9AA3B2] uppercase font-semibold mt-1">
+                Agentic AI Ecosystem
+              </span>
             </div>
           </button>
 
@@ -66,6 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="hidden md:block text-[10px] font-mono text-slate-500 mr-1">
               Queue {metrics.gatedReviewQueueLength}
             </div>
+            <ThemeToggle />
             <button
               onClick={onOpenIngestModal}
               disabled={isProcessing}
@@ -99,5 +107,21 @@ export const Navbar: React.FC<NavbarProps> = ({
         )}
       </div>
     </nav>
+  );
+};
+
+/** Dark <-> light switch. Reads and writes the existing ThemeProvider. */
+const ThemeToggle: React.FC = () => {
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
+  return (
+    <button
+      onClick={toggleTheme}
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      className="p-2 rounded-md text-slate-400 hover:text-cyan-300 border border-transparent hover:border-cyan-500/40 transition-all"
+    >
+      {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+    </button>
   );
 };

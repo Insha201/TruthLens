@@ -1,5 +1,6 @@
 import React from 'react';
-import { Menu, Activity, ShieldCheck } from 'lucide-react';
+import { Menu, Activity, ShieldCheck, Sun, Moon } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 interface FeedNavbarProps {
   onOpenMenu: () => void;
@@ -32,6 +33,7 @@ export const FeedNavbar: React.FC<FeedNavbarProps> = ({ onOpenMenu, onOpenAppVie
 
       {/* Action Controls */}
       <div className="flex items-center gap-4">
+        <ThemeToggle />
         {onOpenAppView && (
           <button
             onClick={onOpenAppView}
@@ -52,5 +54,21 @@ export const FeedNavbar: React.FC<FeedNavbarProps> = ({ onOpenMenu, onOpenAppVie
         </button>
       </div>
     </header>
+  );
+};
+
+/** Dark <-> light switch. Reads and writes the existing ThemeProvider. */
+const ThemeToggle: React.FC = () => {
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
+  return (
+    <button
+      onClick={toggleTheme}
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      className="p-2 rounded-full border border-white/15 hover:border-[#17C3A0] bg-white/5 hover:bg-white/10 text-[#F5F6FA] transition-all cursor-pointer"
+    >
+      {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+    </button>
   );
 };

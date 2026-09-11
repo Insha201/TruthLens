@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { GitBranch, ShieldCheck, AlertOctagon, Info, Activity } from 'lucide-react';
 import { IncidentClaim, NetworkNode } from '../types';
 import { formatReach } from '../lib/ui';
+import { useTheme } from '../context/ThemeContext';
 
 interface NetworkGraphVisualizerProps {
   incident: IncidentClaim;
@@ -9,6 +10,15 @@ interface NetworkGraphVisualizerProps {
 }
 
 export const NetworkGraphVisualizer: React.FC<NetworkGraphVisualizerProps> = ({ incident }) => {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
+  // SVG paint is set via attributes, which CSS utility overrides cannot
+  // reach, so the grid/label/ring colours are chosen here per theme.
+  const gridStroke = isLight ? '#94A3B8' : '#38bdf8';
+  const gridOpacity = isLight ? 0.35 : 0.12;
+  const labelFill = isLight ? '#0F1B2D' : '#e2e8f0';
+  const ringStroke = isLight ? '#0E8F74' : '#38bdf8';
+
   const [simulationMode, setSimulationMode] = useState<'uncontained' | 'contained'>('contained');
   const [selectedNode, setSelectedNode] = useState<NetworkNode | null>(
     incident.spread?.networkNodes[0] || null,
@@ -145,7 +155,7 @@ export const NetworkGraphVisualizer: React.FC<NetworkGraphVisualizerProps> = ({ 
                 </filter>
               </defs>
 
-              <g opacity="0.12" stroke="#38bdf8" strokeWidth="0.5">
+              <g opacity={gridOpacity} stroke={gridStroke} strokeWidth="0.5">
                 {[50, 100, 150, 200, 250].map((y) => (
                   <line key={`gy-${y}`} x1="0" y1={y} x2="850" y2={y} strokeDasharray="4 4" />
                 ))}
@@ -193,7 +203,7 @@ export const NetworkGraphVisualizer: React.FC<NetworkGraphVisualizerProps> = ({ 
                         cy={node.y}
                         r={node.size + 6}
                         fill="none"
-                        stroke="#38bdf8"
+                        stroke={ringStroke}
                         strokeWidth="2"
                         strokeDasharray="3 3"
                       />
@@ -211,7 +221,7 @@ export const NetworkGraphVisualizer: React.FC<NetworkGraphVisualizerProps> = ({ 
                     <text
                       x={node.x}
                       y={node.y + node.size + 14}
-                      fill="#e2e8f0"
+                      fill={labelFill}
                       fontSize="10"
                       fontFamily="monospace"
                       textAnchor="middle"

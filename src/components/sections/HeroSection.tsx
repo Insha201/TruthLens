@@ -32,12 +32,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreAgents, onSee
           Truth<span className="text-[#17C3A0]">Lens</span>
         </motion.h1>
 
-        {/* Imperial Script Accent Subheadline */}
+        {/* Accent Subheadline */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="font-script text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-[#17C3A0] my-4 leading-snug drop-shadow-md"
+          className="font-hero-accent font-semibold text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-[#17C3A0] my-4 leading-snug tracking-tight drop-shadow-md"
         >
           An Agentic AI Ecosystem Against Misinformation
         </motion.p>
@@ -47,9 +47,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreAgents, onSee
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="font-editorial text-lg sm:text-xl md:text-2xl text-[#9AA3B2] max-w-3xl leading-relaxed mt-4 font-normal"
+          className="font-gideon text-lg sm:text-xl md:text-2xl text-[#9AA3B2] max-w-3xl leading-relaxed mt-4 font-normal"
         >
-          Detect a false claim. Trace its origin. Predict where it spreads next. Publish a source-backed correction. All in <span className="text-[#F5F6FA] font-bold underline decoration-[#17C3A0] underline-offset-4">under 90 seconds</span> — with a human always in the loop for high-stakes calls.
+          Spot fake claims, trace them, predict where they'll spread, and post a fact-check in <span className="text-[#F5F6FA] font-bold underline decoration-[#17C3A0] underline-offset-4">90 seconds</span> — human approved for big calls.
         </motion.p>
 
         {/* Action Buttons */}

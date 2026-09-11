@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useTheme } from '../context/ThemeContext';
 
 interface Node {
   x: number;
@@ -12,6 +13,11 @@ interface Node {
 
 export const ParticleBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const { theme } = useTheme();
+  // The render loop reads this ref so a theme switch repaints immediately
+  // without tearing down and re-seeding the particle field.
+  const isLightRef = useRef(theme === 'light');
+  isLightRef.current = theme === 'light';
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -82,11 +88,19 @@ export const ParticleBackground: React.FC = () => {
 
       ctx.clearRect(0, 0, width, height);
 
-      // Background gradient
+      // Background gradient - light theme gets a soft cool-white wash so the
+      // hero reads as a designed light surface, not an inverted dark one.
+      const light = isLightRef.current;
       const bgGrad = ctx.createRadialGradient(mouseX, mouseY, 50, width / 2, height / 2, Math.max(width, height));
-      bgGrad.addColorStop(0, 'rgba(15, 23, 42, 0.85)');
-      bgGrad.addColorStop(0.5, 'rgba(10, 15, 30, 0.95)');
-      bgGrad.addColorStop(1, '#0A0F1E');
+      if (light) {
+        bgGrad.addColorStop(0, '#FFFFFF');
+        bgGrad.addColorStop(0.5, '#F7F9FC');
+        bgGrad.addColorStop(1, '#EEF2F8');
+      } else {
+        bgGrad.addColorStop(0, 'rgba(15, 23, 42, 0.85)');
+        bgGrad.addColorStop(0.5, 'rgba(10, 15, 30, 0.95)');
+        bgGrad.addColorStop(1, '#0A0F1E');
+      }
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, width, height);
 
@@ -130,16 +144,24 @@ export const ParticleBackground: React.FC = () => {
         const pulse = Math.sin(node.pulsePhase) * 0.5 + 0.5;
         const currentRadius = node.radius + pulse * 1.2;
 
+        // On light the neon palette washes out, so use the darker accent
+        // tones and drop the glow: visible, but subtle.
+        const dotColor = light
+          ? color === '#FF5A4E' ? '#D93A2E' : color === '#2EE6A6' ? '#12A883' : '#0E8F74'
+          : color;
+
         ctx.beginPath();
         ctx.arc(node.x, node.y, currentRadius + 4, 0, Math.PI * 2);
-        ctx.fillStyle = color === '#FF5A4E' ? 'rgba(255, 90, 78, 0.08)' : 'rgba(23, 195, 160, 0.08)';
+        ctx.fillStyle = light
+          ? (dotColor === '#D93A2E' ? 'rgba(217, 58, 46, 0.10)' : 'rgba(14, 143, 116, 0.10)')
+          : (color === '#FF5A4E' ? 'rgba(255, 90, 78, 0.08)' : 'rgba(23, 195, 160, 0.08)');
         ctx.fill();
 
         ctx.beginPath();
         ctx.arc(node.x, node.y, currentRadius, 0, Math.PI * 2);
-        ctx.fillStyle = color;
-        ctx.shadowColor = color;
-        ctx.shadowBlur = 8;
+        ctx.fillStyle = dotColor;
+        ctx.shadowColor = dotColor;
+        ctx.shadowBlur = light ? 0 : 8;
         ctx.fill();
         ctx.shadowBlur = 0;
 
@@ -151,11 +173,13 @@ export const ParticleBackground: React.FC = () => {
           const dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < 140) {
-            const alpha = (1 - dist / 140) * 0.18;
+            const alpha = (1 - dist / 140) * (light ? 0.22 : 0.18);
             ctx.beginPath();
             ctx.moveTo(node.x, node.y);
             ctx.lineTo(node2.x, node2.y);
-            ctx.strokeStyle = isTrustNow ? `rgba(23, 195, 160, ${alpha})` : `rgba(255, 90, 78, ${alpha * 0.8})`;
+            ctx.strokeStyle = light
+              ? (isTrustNow ? `rgba(14, 143, 116, ${alpha})` : `rgba(217, 58, 46, ${alpha * 0.8})`)
+              : (isTrustNow ? `rgba(23, 195, 160, ${alpha})` : `rgba(255, 90, 78, ${alpha * 0.8})`);
             ctx.lineWidth = 1;
             ctx.stroke();
           }

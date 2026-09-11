@@ -78,8 +78,8 @@ function MisinformationContainmentApp() {
   useEffect(() => {
     refreshClaims();
     refreshEvidence();
-    // Force dark mode on html
-    document.documentElement.classList.add('dark');
+    // Theme class is owned by ThemeProvider (dark is its default), so it
+    // must not be forced here or the light toggle can never take effect.
   }, []);
 
   const currentIncident = incidents.find((i) => i.id === currentIncidentId) || incidents[0];
