@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PageHeader } from '../components/ui/PageHeader';
 import { DOMAIN_LABELS, IncidentClaim } from '../types';
+import { AuditChainBadge } from '../components/AuditChainBadge';
 
 const ACTION_LABEL: Record<string, string> = {
   claim_detected: 'Claim detected',
@@ -344,7 +345,10 @@ export const CounterNarrativePage = ({
       {/* Real audit trail from Neo4j */}
       <div className="premium-card p-6">
         <h3 className="text-sm font-bold tracking-widest text-slate-300 mb-1">Audit trail</h3>
-        <p className="text-xs text-slate-500 mb-6">{trail.length} events recorded in Neo4j.</p>
+        <p className="text-xs text-slate-500 mb-4">{trail.length} events recorded in Neo4j.</p>
+        <div className="mb-6">
+          <AuditChainBadge claimId={currentIncident.id} />
+        </div>
         {trail.length === 0 ? (
           <p className="text-sm text-slate-500">No audit events for this claim.</p>
         ) : (

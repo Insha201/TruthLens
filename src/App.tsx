@@ -169,6 +169,44 @@ function MisinformationContainmentApp() {
     }, 900);
   };
 
+  /**
+   * Pull a fresh batch of live posts from the configured sources and run each
+   * one through the full four-agent pipeline, then reload the claim list.
+   *
+   * The backend keeps only the most suspicious `max_total` posts, so this is
+   * bounded work rather than an open-ended crawl.
+   */
+  const handlePullLiveSignals = async () => {
+    setIsProcessing(true);
+    showToast('Pulling live signals from NewsAPI, YouTube and RSS...', 'info');
+    try {
+      const response = await fetch('/api/ingest/bulk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ max_total: 10 }),
+      });
+      if (!response.ok) throw new Error(`Ingest returned ${response.status}`);
+      const data = await response.json();
+
+      await refreshClaims();
+      await refreshEvidence();
+
+      const count = data.total_ingested ?? 0;
+      setActivePage('live_claims');
+      showToast(
+        count > 0
+          ? `Ingested ${count} live post(s) through the pipeline.`
+          : 'No new posts were returned by the sources.',
+        count > 0 ? 'success' : 'info',
+      );
+    } catch (err) {
+      console.warn('Bulk ingest failed:', err);
+      showToast('Live pull failed - the backend or a source was unreachable.', 'info');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   // Handle Submit Custom Claim
   const handleSubmitClaim = async (claimText: string, platform: Platform, category: string) => {
     setIsProcessing(true);
@@ -357,6 +395,7 @@ function MisinformationContainmentApp() {
         setActivePage={setActivePage}
         metrics={metrics}
         onOpenIngestModal={() => setIsIngestModalOpen(true)}
+        onPullLive={handlePullLiveSignals}
         isProcessing={isProcessing}
       />
 

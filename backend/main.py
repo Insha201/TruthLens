@@ -20,6 +20,7 @@ from graph.neo4j_client import (
     get_review,
     create_audit_event,
     list_claims,
+    verify_claim_chain,
 )
 from workflow.graph import misinformation_graph, _claim_id
 from ingestion.ingestion_manager import fetch_all_posts, fetch_single_post, get_source_status
@@ -374,6 +375,18 @@ def get_claim_review(claim_id: str):
         "approved": review["approved"],
         "status": review["status"]
     }
+
+
+@app.get("/api/claims/{claim_id}/verify-chain")
+def verify_chain(claim_id: str):
+    """
+    Recompute this claim's SHA-256 audit chain and report whether it is intact.
+
+    Returns valid=false together with the sequence number of the first event
+    whose stored hash no longer matches its contents, which is what makes the
+    audit trail tamper-evident rather than merely present.
+    """
+    return verify_claim_chain(claim_id)
 
 
 @app.post("/api/claims")

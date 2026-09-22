@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MainAppPage, SystemMetrics } from '../types';
-import { Activity, FileText, GitBranch, Menu, Moon, Play, Search, Sun, X } from 'lucide-react';
+import { Activity, Download, FileText, GitBranch, Loader2, Menu, Moon, Play, Search, Sun, X } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
 interface NavbarProps {
@@ -8,6 +8,7 @@ interface NavbarProps {
   setActivePage: (p: MainAppPage) => void;
   metrics: SystemMetrics;
   onOpenIngestModal?: () => void;
+  onPullLive?: () => void;
   isProcessing?: boolean;
 }
 
@@ -16,6 +17,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   setActivePage,
   metrics,
   onOpenIngestModal,
+  onPullLive,
   isProcessing,
 }) => {
   const [open, setOpen] = useState(false);
@@ -74,6 +76,19 @@ export const Navbar: React.FC<NavbarProps> = ({
               Queue {metrics.gatedReviewQueueLength}
             </div>
             <ThemeToggle />
+            <button
+              onClick={onPullLive}
+              disabled={isProcessing}
+              title="Fetch fresh posts from NewsAPI, YouTube and RSS, then run the pipeline"
+              className="flex items-center gap-2 px-3 py-2 rounded-md font-bold text-[10px] tracking-[0.14em] uppercase border border-emerald-400/50 text-emerald-300 hover:bg-emerald-400 hover:text-slate-950 transition-all disabled:opacity-50"
+            >
+              {isProcessing ? (
+                <Loader2 className="w-3 h-3 animate-spin" />
+              ) : (
+                <Download className="w-3 h-3" />
+              )}
+              {isProcessing ? 'Pulling' : 'Pull live'}
+            </button>
             <button
               onClick={onOpenIngestModal}
               disabled={isProcessing}

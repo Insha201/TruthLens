@@ -568,6 +568,22 @@ async function startServer() {
     }
   });
 
+  // ── Audit-chain integrity check ─────────────────────
+  //    Recomputes the claim's SHA-256 audit chain in Neo4j. Read-only.
+  app.get('/api/claims/:id/verify-chain', async (req, res) => {
+    const { id } = req.params;
+    try {
+      const claimText = (await resolveClaimText(id)) || id;
+      const data = await backendJson(
+        `${BACKEND_URL}/api/claims/${encodeURIComponent(claimText)}/verify-chain`,
+      );
+      res.json(data);
+    } catch (err) {
+      console.error('GET /api/claims/:id/verify-chain →', err);
+      res.status(502).json({ error: 'Backend unavailable', detail: String(err) });
+    }
+  });
+
   // ── Human review decision (forwarded to FastAPI + Neo4j) ───
   app.post('/api/claims/:id/review', async (req, res) => {
     const { id } = req.params;
