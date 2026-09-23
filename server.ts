@@ -568,6 +568,23 @@ async function startServer() {
     }
   });
 
+  // ── Translate agent output for display ───────────────
+  //    The analysis stays English end to end; this renders it for the reader.
+  app.post('/api/translate', async (req, res) => {
+    try {
+      const r = await fetch(`${BACKEND_URL}/api/translate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(req.body || {}),
+      });
+      if (!r.ok) throw new Error(`Backend returned ${r.status}`);
+      res.json(await r.json());
+    } catch (err) {
+      console.error('POST /api/translate →', err);
+      res.status(502).json({ error: 'Backend unavailable', detail: String(err) });
+    }
+  });
+
   // ── Audit-chain integrity check ─────────────────────
   //    Recomputes the claim's SHA-256 audit chain in Neo4j. Read-only.
   app.get('/api/claims/:id/verify-chain', async (req, res) => {

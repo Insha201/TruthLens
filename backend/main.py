@@ -25,6 +25,7 @@ from graph.neo4j_client import (
 from workflow.graph import misinformation_graph, _claim_id
 from ingestion.ingestion_manager import fetch_all_posts, fetch_single_post, get_source_status
 from storage.vector_store import add_document, list_documents, count_documents
+from translate import translate_text, translate_fields, LANGUAGE_NAMES
 from graph.neo4j_client import claim_usage_by_evidence, upsert_claim
 from datetime import datetime, timezone
 
@@ -374,6 +375,33 @@ def get_claim_review(claim_id: str):
         "claim_id": claim_id,
         "approved": review["approved"],
         "status": review["status"]
+    }
+
+
+@app.post("/api/translate")
+def translate_payload(payload: dict):
+    """
+    Translate agent output for display.
+
+    Body: {"target": "hi" | "mr" | "en", "fields": {"name": "text", ...}}
+
+    The analysis itself is always produced and verified in English, because the
+    evidence corpus grounding it is English. This endpoint renders that verified
+    analysis for a Hindi or Marathi reader; the UI labels the result as a
+    machine translation so it is not mistaken for the verified original.
+    """
+    target = str(payload.get("target") or "en")
+    if target not in LANGUAGE_NAMES:
+        return {"target": "en", "fields": payload.get("fields") or {}, "translated": False}
+
+    fields = payload.get("fields") or {}
+    if not isinstance(fields, dict):
+        return {"target": target, "fields": {}, "translated": False}
+
+    return {
+        "target": target,
+        "fields": translate_fields(fields, target),
+        "translated": target != "en",
     }
 
 

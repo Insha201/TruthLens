@@ -16,6 +16,16 @@ MISINFORMATION_KEYWORDS = [
 ]
 
 
+# Languages requested from NewsAPI. Hindi ("hi") is supported by the API;
+# Marathi is not, so Marathi content is sourced from the RSS feeds instead.
+# Override with NEWS_LANGUAGES=en,hi in backend/.env.
+NEWS_LANGUAGES = [
+    code.strip()
+    for code in os.getenv("NEWS_LANGUAGES", "en,hi").split(",")
+    if code.strip()
+]
+
+
 def fetch_news_articles(max_articles: int = 20) -> list[dict]:
     """
     Fetch news articles related to misinformation topics.
@@ -25,10 +35,11 @@ def fetch_news_articles(max_articles: int = 20) -> list[dict]:
     all_articles = []
 
     for keyword in MISINFORMATION_KEYWORDS[:5]:
+      for lang_code in NEWS_LANGUAGES:
         try:
             response = news_client.get_everything(
                 q=keyword,
-                language="en",
+                language=lang_code,
                 sort_by="publishedAt",
                 page_size=5
             )

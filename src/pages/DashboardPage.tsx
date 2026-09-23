@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { IncidentClaim, MainAppPage, SystemMetrics } from '../types';
 import { PageHeader } from '../components/ui/PageHeader';
+import { useLanguage } from '../context/LanguageContext';
 import { CountUp } from '../components/ui/CountUp';
 import { formatReach, severityOf, severityTone, STAGE_LABEL } from '../lib/ui';
 
@@ -17,6 +18,7 @@ export const DashboardPage = ({
   setCurrentIncidentId: (id: string) => void;
   setPage: (p: MainAppPage) => void;
 }) => {
+  const { t } = useLanguage();
   const [range, setRange] = useState<'24h' | '7d' | '30d'>('24h');
   const highSeverity = incidents.filter((i) => ['high', 'critical'].includes(severityOf(i))).length;
   const reviewed = incidents.filter((i) => i.humanReview.status !== 'pending').length;
@@ -56,20 +58,20 @@ export const DashboardPage = ({
   return (
     <div className="space-y-8">
       <PageHeader
-        kicker="Operations"
-        title="Misinformation Intelligence Center"
-        subtitle="Monitor, investigate and contain misinformation in real time."
+        kicker={t('dash.kicker')}
+        title={t('dash.title')}
+        subtitle={t('dash.subtitle')}
         live
       />
 
       <div className="grid grid-cols-2 xl:grid-cols-6 gap-4">
         {[
-          { label: 'Flagged claims', val: metrics.activeIncidentsCount },
-          { label: 'Active investigations', val: active },
-          { label: 'High severity', val: highSeverity },
-          { label: 'Claims reviewed', val: reviewed },
-          { label: 'Verified sources', val: metrics.indexedFactCheckCount },
-          { label: 'Avg response (s)', val: metrics.avgPipelineLatencySeconds, decimals: 1 },
+          { label: t('dash.flaggedClaims'), val: metrics.activeIncidentsCount },
+          { label: t('dash.activeInvestigations'), val: active },
+          { label: t('dash.highSeverity'), val: highSeverity },
+          { label: t('dash.claimsReviewed'), val: reviewed },
+          { label: t('dash.verifiedSources'), val: metrics.indexedFactCheckCount },
+          { label: t('dash.avgResponse'), val: metrics.avgPipelineLatencySeconds, decimals: 1 },
         ].map((k) => (
           <div key={k.label} className="kpi-card">
             <div className="text-3xl font-extrabold text-cyan-300">

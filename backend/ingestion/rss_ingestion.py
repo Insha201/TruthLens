@@ -15,6 +15,20 @@ RSS_FEEDS = {
     "Snopes": "https://www.snopes.com/feed/",
     "PolitiFact": "https://www.politifact.com/rss/factchecks/",
     "FactCheck": "https://www.factcheck.org/feed/",
+
+    # ── Hindi ────────────────────────────────────────────────
+    "BBC Hindi": "https://feeds.bbci.co.uk/hindi/rss.xml",
+    "NDTV India": "https://feeds.feedburner.com/ndtvkhabar",
+    "Amar Ujala": "https://www.amarujala.com/rss/breaking-news.xml",
+
+    # ── Marathi ──────────────────────────────────────────────
+    "BBC Marathi": "https://feeds.bbci.co.uk/marathi/rss.xml",
+    "Maharashtra Times": "https://maharashtratimes.com/rssfeedstopstories.cms",
+    "Loksatta": "https://www.loksatta.com/feed/",
+
+    # ── Indian fact-checkers (Hindi + English) ───────────────
+    "BOOM Live": "https://www.boomlive.in/feeds/feed.xml",
+    "Factly": "https://factly.in/feed/",
     "Full Fact": "https://fullfact.org/feed/all/",
 }
 

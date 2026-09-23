@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export const PageHeader: React.FC<{
   kicker?: string;
@@ -6,7 +7,9 @@ export const PageHeader: React.FC<{
   subtitle?: string;
   live?: boolean;
   actions?: React.ReactNode;
-}> = ({ kicker, title, subtitle, live, actions }) => (
+}> = ({ kicker, title, subtitle, live, actions }) => {
+  const { t } = useLanguage();
+  return (
   <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
     <div>
       {kicker && (
@@ -24,10 +27,11 @@ export const PageHeader: React.FC<{
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
           </span>
-          Live monitoring
+          {t('dash.liveMonitoring')}
         </span>
       )}
       {actions}
     </div>
   </header>
-);
+  );
+};

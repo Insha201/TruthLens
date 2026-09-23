@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { MainAppPage, SystemMetrics } from '../types';
 import { Activity, Download, FileText, GitBranch, Loader2, Menu, Moon, Play, Search, Sun, X } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../context/LanguageContext';
+import { LANGUAGES } from '../i18n/translations';
 
 interface NavbarProps {
   activePage: MainAppPage;
@@ -21,13 +23,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   isProcessing,
 }) => {
   const [open, setOpen] = useState(false);
+  const { t } = useLanguage();
   const tabs: Array<{ id: MainAppPage; label: string; icon: React.ReactNode }> = [
-    { id: 'dashboard', label: 'Dashboard', icon: <Activity className="w-3.5 h-3.5" /> },
-    { id: 'live_claims', label: 'Live Claims', icon: <Search className="w-3.5 h-3.5" /> },
-    { id: 'investigation', label: 'Investigation', icon: <Search className="w-3.5 h-3.5" /> },
-    { id: 'spread_intelligence', label: 'Spread', icon: <GitBranch className="w-3.5 h-3.5" /> },
-    { id: 'evidence_review', label: 'Evidence', icon: <FileText className="w-3.5 h-3.5" /> },
-    { id: 'counter_narrative', label: 'Counter-Narrative', icon: <FileText className="w-3.5 h-3.5" /> },
+    { id: 'dashboard', label: t('nav.dashboard'), icon: <Activity className="w-3.5 h-3.5" /> },
+    { id: 'live_claims', label: t('nav.liveClaims'), icon: <Search className="w-3.5 h-3.5" /> },
+    { id: 'investigation', label: t('nav.investigation'), icon: <Search className="w-3.5 h-3.5" /> },
+    { id: 'spread_intelligence', label: t('nav.spread'), icon: <GitBranch className="w-3.5 h-3.5" /> },
+    { id: 'evidence_review', label: t('nav.evidence'), icon: <FileText className="w-3.5 h-3.5" /> },
+    { id: 'counter_narrative', label: t('nav.counterNarrative'), icon: <FileText className="w-3.5 h-3.5" /> },
   ];
 
   return (
@@ -49,7 +52,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 TruthLens
               </span>
               <span className="text-[9px] font-sans-display tracking-[0.2em] text-[#9AA3B2] uppercase font-semibold mt-1">
-                Agentic AI Ecosystem
+                {t('nav.tagline')}
               </span>
             </div>
           </button>
@@ -73,8 +76,9 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <div className="flex items-center gap-2">
             <div className="hidden md:block text-[10px] font-mono text-slate-500 mr-1">
-              Queue {metrics.gatedReviewQueueLength}
+              {t('nav.queue')} {metrics.gatedReviewQueueLength}
             </div>
+            <LanguageSwitcher />
             <ThemeToggle />
             <button
               onClick={onPullLive}
@@ -87,7 +91,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               ) : (
                 <Download className="w-3 h-3" />
               )}
-              {isProcessing ? 'Pulling' : 'Pull live'}
+              {isProcessing ? t('nav.pulling') : t('nav.pullLive')}
             </button>
             <button
               onClick={onOpenIngestModal}
@@ -95,7 +99,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center gap-2 px-3 py-2 rounded-md font-bold text-[10px] tracking-[0.14em] uppercase border border-cyan-400/50 text-cyan-300 hover:bg-cyan-400 hover:text-slate-950 transition-all disabled:opacity-50"
             >
               <Play className="w-3 h-3" />
-              Inject signal
+              {t('nav.injectSignal')}
             </button>
             <button className="xl:hidden p-2 text-slate-300" onClick={() => setOpen(!open)}>
               {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -138,5 +142,34 @@ const ThemeToggle: React.FC = () => {
     >
       {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
     </button>
+  );
+};
+
+
+/** Three-way language selector. Persists via LanguageContext. */
+const LanguageSwitcher: React.FC = () => {
+  const { lang, setLang } = useLanguage();
+  return (
+    <div
+      className="flex items-center rounded-md border border-slate-600/50 overflow-hidden"
+      role="group"
+      aria-label="Language"
+    >
+      {LANGUAGES.map((l) => (
+        <button
+          key={l.code}
+          onClick={() => setLang(l.code)}
+          title={l.label}
+          aria-pressed={lang === l.code}
+          className={`px-2 py-1.5 text-[10px] font-bold transition-colors ${
+            lang === l.code
+              ? 'bg-cyan-500/20 text-cyan-300'
+              : 'text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          {l.native}
+        </button>
+      ))}
+    </div>
   );
 };

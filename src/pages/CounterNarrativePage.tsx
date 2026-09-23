@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PageHeader } from '../components/ui/PageHeader';
 import { DOMAIN_LABELS, IncidentClaim } from '../types';
 import { AuditChainBadge } from '../components/AuditChainBadge';
+import { TranslatePanel } from '../components/TranslatePanel';
 
 const ACTION_LABEL: Record<string, string> = {
   claim_detected: 'Claim detected',
@@ -150,11 +151,30 @@ export const CounterNarrativePage = ({
         subtitle="Written by the Narrative Drafter using only evidence retrieved from the RAG store at generation time."
       />
 
-      {/* The claim being answered */}
+      {/* The claim being answered, with on-demand translation of the analysis */}
       <div className="premium-card p-6">
-        <div className="text-[11px] uppercase tracking-widest text-slate-500 mb-2">Responding to</div>
-        <p className="text-lg text-slate-100">“{currentIncident.claimText}”</p>
-        <div className="flex flex-wrap gap-4 mt-3 text-[11px] font-mono text-slate-500">
+        <div className="text-[11px] uppercase tracking-widest text-slate-500 mb-3">Responding to</div>
+        <TranslatePanel
+          fields={{
+            claim: currentIncident.claimText || '',
+            rebuttal: narrative?.fullRebuttal || '',
+          }}
+        >
+          {(text) => (
+            <>
+              <p className="text-lg text-slate-100">“{text.claim}”</p>
+              {text.rebuttal && (
+                <div className="mt-4 pt-4 border-t border-white/10">
+                  <div className="text-[11px] uppercase tracking-widest text-slate-500 mb-2">
+                    Counter-narrative
+                  </div>
+                  <p className="text-sm text-slate-200 leading-relaxed">{text.rebuttal}</p>
+                </div>
+              )}
+            </>
+          )}
+        </TranslatePanel>
+        <div className="flex flex-wrap gap-4 mt-4 text-[11px] font-mono text-slate-500">
           <span>{currentIncident.id}</span>
           <span>severity {currentIncident.detector?.severity ?? '—'}</span>
           <span>confidence {currentIncident.detector?.confidence ?? '—'}%</span>

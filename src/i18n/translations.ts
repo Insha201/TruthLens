@@ -1,0 +1,307 @@
+/**
+ * UI string catalogue for English, Hindi and Marathi.
+ *
+ * Only interface chrome lives here. Agent output (claims, rationales,
+ * counter-narratives) is generated text and is translated at request time by
+ * the backend — see POST /api/translate — because pre-translating it is not
+ * possible and machine-translating it in the browser would strip the evidence
+ * grounding the whole system depends on.
+ */
+
+export type Lang = 'en' | 'hi' | 'mr';
+
+export const LANGUAGES: { code: Lang; label: string; native: string }[] = [
+  { code: 'en', label: 'English', native: 'English' },
+  { code: 'hi', label: 'Hindi', native: 'हिंदी' },
+  { code: 'mr', label: 'Marathi', native: 'मराठी' },
+];
+
+type Dict = Record<string, string>;
+
+const en: Dict = {
+  // ── navigation ──────────────────────────────────────────────
+  'nav.dashboard': 'Dashboard',
+  'nav.liveClaims': 'Live Claims',
+  'nav.investigation': 'Investigation',
+  'nav.spread': 'Spread',
+  'nav.evidence': 'Evidence',
+  'nav.counterNarrative': 'Counter-Narrative',
+  'nav.queue': 'Queue',
+  'nav.pullLive': 'Pull live',
+  'nav.pulling': 'Pulling',
+  'nav.injectSignal': 'Inject signal',
+  'nav.tagline': 'Agentic AI Ecosystem',
+
+  // ── dashboard ───────────────────────────────────────────────
+  'dash.kicker': 'Operations',
+  'dash.title': 'Misinformation Intelligence Center',
+  'dash.subtitle': 'Monitor, investigate and contain misinformation in real time.',
+  'dash.liveMonitoring': 'Live monitoring',
+  'dash.flaggedClaims': 'Flagged claims',
+  'dash.activeInvestigations': 'Active investigations',
+  'dash.highSeverity': 'High severity',
+  'dash.claimsReviewed': 'Claims reviewed',
+  'dash.verifiedSources': 'Verified sources',
+  'dash.avgResponse': 'Avg response (s)',
+  'dash.activity': 'Misinformation activity',
+  'dash.claimSeverity': 'Claim severity',
+  'dash.noClaims': 'No claims processed in the last 24 hours.',
+
+  // ── live claims ─────────────────────────────────────────────
+  'claims.kicker': 'Monitor',
+  'claims.title': 'Live Claim Monitor',
+  'claims.subtitle': 'Incoming claims with live severity, origin, and pipeline stage.',
+  'claims.domain': 'Domain',
+  'claims.status': 'Status',
+  'claims.all': 'All',
+  'claims.investigate': 'Investigate',
+  'claims.viewAnalysis': 'View analysis',
+  'claims.confidence': 'Confidence',
+  'claims.origin': 'Origin',
+  'claims.spread': 'Spread',
+  'claims.evidence': 'Evidence',
+  'claims.stage': 'Stage',
+  'claims.none': 'No claims yet. Use Pull live to fetch from the configured sources.',
+
+  // ── investigation ───────────────────────────────────────────
+  'inv.kicker': 'Case file',
+  'inv.title': 'Claim Investigation',
+  'inv.detection': 'Detection',
+  'inv.claimDetector': 'Claim Detector',
+  'inv.origin': 'Origin',
+  'inv.originTracer': 'Origin Tracer',
+  'inv.spreadPrediction': 'Spread prediction',
+  'inv.spreadPredictor': 'Spread Predictor',
+  'inv.analysing': 'Analysing claim…',
+  'inv.severity': 'Severity',
+  'inv.timestamp': 'Timestamp',
+  'inv.noIncident': 'No incident selected.',
+
+  // ── counter-narrative ───────────────────────────────────────
+  'cn.title': 'RAG Counter-Narrative & HITL Gate',
+  'cn.draft': 'Generated Counter-Narrative Draft',
+  'cn.approve': 'Approve',
+  'cn.reject': 'Reject',
+  'cn.release': 'Release',
+  'cn.nothingToRelease': 'Nothing to release — no counter-narrative was generated for this claim.',
+  'cn.auditTrail': 'Audit trail',
+  'cn.eventsRecorded': 'events recorded in Neo4j.',
+  'cn.noEvents': 'No audit events for this claim.',
+
+  // ── audit chain badge ───────────────────────────────────────
+  'chain.verified': 'Audit chain verified',
+  'chain.broken': 'Audit chain BROKEN',
+  'chain.notChained': 'Not chained',
+  'chain.checking': 'Verifying audit chain…',
+  'chain.unavailable': 'Chain integrity unavailable — backend unreachable.',
+  'chain.events': 'events',
+  'chain.tip': 'tip',
+  'chain.event': 'Event',
+  'chain.legacy': 'event(s) predate integrity checking — nothing to verify.',
+
+  // ── evidence ────────────────────────────────────────────────
+  'ev.kicker': 'Knowledge base',
+  'ev.title': 'Evidence Review',
+  'ev.subtitle': 'Fact-check documents retrieved to ground counter-narratives.',
+  'ev.documents': 'documents',
+  'ev.publisher': 'Publisher',
+  'ev.usedBy': 'Used by',
+
+  // ── common ──────────────────────────────────────────────────
+  'common.backendOffline': 'Backend unreachable. Nothing below is live data.',
+  'common.loading': 'Loading…',
+  'common.language': 'Language',
+  'common.translate': 'Translate',
+  'common.showOriginal': 'Show original',
+  'common.translating': 'Translating…',
+  'common.translatedNote': 'Machine translation of the original English analysis.',
+};
+
+const hi: Dict = {
+  'nav.dashboard': 'डैशबोर्ड',
+  'nav.liveClaims': 'लाइव दावे',
+  'nav.investigation': 'जाँच',
+  'nav.spread': 'प्रसार',
+  'nav.evidence': 'प्रमाण',
+  'nav.counterNarrative': 'प्रति-कथन',
+  'nav.queue': 'कतार',
+  'nav.pullLive': 'लाइव लाएँ',
+  'nav.pulling': 'ला रहे हैं',
+  'nav.injectSignal': 'संकेत जोड़ें',
+  'nav.tagline': 'एजेंटिक एआई पारिस्थितिकी',
+
+  'dash.kicker': 'संचालन',
+  'dash.title': 'गलत सूचना खुफिया केंद्र',
+  'dash.subtitle': 'वास्तविक समय में गलत सूचना की निगरानी, जाँच और रोकथाम करें।',
+  'dash.liveMonitoring': 'लाइव निगरानी',
+  'dash.flaggedClaims': 'चिह्नित दावे',
+  'dash.activeInvestigations': 'सक्रिय जाँच',
+  'dash.highSeverity': 'उच्च गंभीरता',
+  'dash.claimsReviewed': 'समीक्षित दावे',
+  'dash.verifiedSources': 'सत्यापित स्रोत',
+  'dash.avgResponse': 'औसत प्रतिक्रिया (से.)',
+  'dash.activity': 'गलत सूचना गतिविधि',
+  'dash.claimSeverity': 'दावे की गंभीरता',
+  'dash.noClaims': 'पिछले 24 घंटों में कोई दावा संसाधित नहीं हुआ।',
+
+  'claims.kicker': 'निगरानी',
+  'claims.title': 'लाइव दावा मॉनिटर',
+  'claims.subtitle': 'आने वाले दावे, उनकी गंभीरता, स्रोत और पाइपलाइन चरण के साथ।',
+  'claims.domain': 'क्षेत्र',
+  'claims.status': 'स्थिति',
+  'claims.all': 'सभी',
+  'claims.investigate': 'जाँच करें',
+  'claims.viewAnalysis': 'विश्लेषण देखें',
+  'claims.confidence': 'विश्वास',
+  'claims.origin': 'स्रोत',
+  'claims.spread': 'प्रसार',
+  'claims.evidence': 'प्रमाण',
+  'claims.stage': 'चरण',
+  'claims.none': 'अभी कोई दावा नहीं। स्रोतों से लाने के लिए "लाइव लाएँ" दबाएँ।',
+
+  'inv.kicker': 'केस फ़ाइल',
+  'inv.title': 'दावे की जाँच',
+  'inv.detection': 'पहचान',
+  'inv.claimDetector': 'दावा पहचानकर्ता',
+  'inv.origin': 'उद्गम',
+  'inv.originTracer': 'उद्गम अनुरेखक',
+  'inv.spreadPrediction': 'प्रसार पूर्वानुमान',
+  'inv.spreadPredictor': 'प्रसार पूर्वानुमानक',
+  'inv.analysing': 'दावे का विश्लेषण हो रहा है…',
+  'inv.severity': 'गंभीरता',
+  'inv.timestamp': 'समय',
+  'inv.noIncident': 'कोई घटना चयनित नहीं।',
+
+  'cn.title': 'RAG प्रति-कथन और मानव समीक्षा द्वार',
+  'cn.draft': 'तैयार प्रति-कथन प्रारूप',
+  'cn.approve': 'स्वीकृत करें',
+  'cn.reject': 'अस्वीकार करें',
+  'cn.release': 'जारी करें',
+  'cn.nothingToRelease': 'जारी करने के लिए कुछ नहीं — इस दावे के लिए कोई प्रति-कथन नहीं बना।',
+  'cn.auditTrail': 'अंकेक्षण शृंखला',
+  'cn.eventsRecorded': 'घटनाएँ Neo4j में दर्ज हैं।',
+  'cn.noEvents': 'इस दावे के लिए कोई अंकेक्षण घटना नहीं।',
+
+  'chain.verified': 'अंकेक्षण शृंखला सत्यापित',
+  'chain.broken': 'अंकेक्षण शृंखला भंग',
+  'chain.notChained': 'शृंखलाबद्ध नहीं',
+  'chain.checking': 'अंकेक्षण शृंखला जाँची जा रही है…',
+  'chain.unavailable': 'शृंखला अखंडता अनुपलब्ध — बैकएंड से संपर्क नहीं।',
+  'chain.events': 'घटनाएँ',
+  'chain.tip': 'शीर्ष',
+  'chain.event': 'घटना',
+  'chain.legacy': 'घटनाएँ अखंडता जाँच से पहले की हैं — सत्यापन हेतु कुछ नहीं।',
+
+  'ev.kicker': 'ज्ञान भंडार',
+  'ev.title': 'प्रमाण समीक्षा',
+  'ev.subtitle': 'प्रति-कथन को आधार देने हेतु प्राप्त तथ्य-जाँच दस्तावेज़।',
+  'ev.documents': 'दस्तावेज़',
+  'ev.publisher': 'प्रकाशक',
+  'ev.usedBy': 'प्रयुक्त',
+
+  'common.backendOffline': 'बैकएंड से संपर्क नहीं। नीचे दिया गया डेटा लाइव नहीं है।',
+  'common.loading': 'लोड हो रहा है…',
+  'common.language': 'भाषा',
+  'common.translate': 'अनुवाद करें',
+  'common.showOriginal': 'मूल दिखाएँ',
+  'common.translating': 'अनुवाद हो रहा है…',
+  'common.translatedNote': 'मूल अंग्रेज़ी विश्लेषण का मशीनी अनुवाद।',
+};
+
+const mr: Dict = {
+  'nav.dashboard': 'डॅशबोर्ड',
+  'nav.liveClaims': 'थेट दावे',
+  'nav.investigation': 'तपास',
+  'nav.spread': 'प्रसार',
+  'nav.evidence': 'पुरावा',
+  'nav.counterNarrative': 'प्रति-कथन',
+  'nav.queue': 'रांग',
+  'nav.pullLive': 'थेट आणा',
+  'nav.pulling': 'आणत आहे',
+  'nav.injectSignal': 'संकेत जोडा',
+  'nav.tagline': 'एजंटिक एआय परिसंस्था',
+
+  'dash.kicker': 'संचालन',
+  'dash.title': 'चुकीची माहिती गुप्तवार्ता केंद्र',
+  'dash.subtitle': 'चुकीच्या माहितीचे रिअल-टाइम निरीक्षण, तपास आणि नियंत्रण करा.',
+  'dash.liveMonitoring': 'थेट निरीक्षण',
+  'dash.flaggedClaims': 'चिन्हांकित दावे',
+  'dash.activeInvestigations': 'सुरू असलेले तपास',
+  'dash.highSeverity': 'उच्च तीव्रता',
+  'dash.claimsReviewed': 'पुनरावलोकन केलेले दावे',
+  'dash.verifiedSources': 'सत्यापित स्रोत',
+  'dash.avgResponse': 'सरासरी प्रतिसाद (से.)',
+  'dash.activity': 'चुकीच्या माहितीची हालचाल',
+  'dash.claimSeverity': 'दाव्याची तीव्रता',
+  'dash.noClaims': 'गेल्या २४ तासांत कोणताही दावा प्रक्रियेत आला नाही.',
+
+  'claims.kicker': 'निरीक्षण',
+  'claims.title': 'थेट दावा मॉनिटर',
+  'claims.subtitle': 'येणारे दावे, त्यांची तीव्रता, स्रोत आणि प्रक्रियेचा टप्पा.',
+  'claims.domain': 'क्षेत्र',
+  'claims.status': 'स्थिती',
+  'claims.all': 'सर्व',
+  'claims.investigate': 'तपास करा',
+  'claims.viewAnalysis': 'विश्लेषण पहा',
+  'claims.confidence': 'विश्वास',
+  'claims.origin': 'स्रोत',
+  'claims.spread': 'प्रसार',
+  'claims.evidence': 'पुरावा',
+  'claims.stage': 'टप्पा',
+  'claims.none': 'अद्याप कोणताही दावा नाही. स्रोतांकडून आणण्यासाठी "थेट आणा" दाबा.',
+
+  'inv.kicker': 'प्रकरण नोंद',
+  'inv.title': 'दाव्याचा तपास',
+  'inv.detection': 'ओळख',
+  'inv.claimDetector': 'दावा ओळखकर्ता',
+  'inv.origin': 'उगम',
+  'inv.originTracer': 'उगम शोधक',
+  'inv.spreadPrediction': 'प्रसार अंदाज',
+  'inv.spreadPredictor': 'प्रसार अंदाजक',
+  'inv.analysing': 'दाव्याचे विश्लेषण सुरू आहे…',
+  'inv.severity': 'तीव्रता',
+  'inv.timestamp': 'वेळ',
+  'inv.noIncident': 'कोणतीही घटना निवडलेली नाही.',
+
+  'cn.title': 'RAG प्रति-कथन आणि मानवी पुनरावलोकन',
+  'cn.draft': 'तयार केलेला प्रति-कथन मसुदा',
+  'cn.approve': 'मंजूर करा',
+  'cn.reject': 'नाकारा',
+  'cn.release': 'प्रसिद्ध करा',
+  'cn.nothingToRelease': 'प्रसिद्ध करण्यासाठी काही नाही — या दाव्यासाठी प्रति-कथन तयार झाले नाही.',
+  'cn.auditTrail': 'लेखापरीक्षण नोंद',
+  'cn.eventsRecorded': 'घटना Neo4j मध्ये नोंदल्या आहेत.',
+  'cn.noEvents': 'या दाव्यासाठी कोणतीही लेखापरीक्षण नोंद नाही.',
+
+  'chain.verified': 'लेखापरीक्षण साखळी सत्यापित',
+  'chain.broken': 'लेखापरीक्षण साखळी तुटली',
+  'chain.notChained': 'साखळीत नाही',
+  'chain.checking': 'लेखापरीक्षण साखळी तपासत आहे…',
+  'chain.unavailable': 'साखळी अखंडता उपलब्ध नाही — बॅकएंडशी संपर्क नाही.',
+  'chain.events': 'घटना',
+  'chain.tip': 'शिखर',
+  'chain.event': 'घटना',
+  'chain.legacy': 'घटना अखंडता तपासणीपूर्वीच्या आहेत — तपासण्यासाठी काही नाही.',
+
+  'ev.kicker': 'ज्ञानकोश',
+  'ev.title': 'पुरावा पुनरावलोकन',
+  'ev.subtitle': 'प्रति-कथनाला आधार देण्यासाठी मिळवलेली तथ्य-तपासणी कागदपत्रे.',
+  'ev.documents': 'कागदपत्रे',
+  'ev.publisher': 'प्रकाशक',
+  'ev.usedBy': 'वापरलेले',
+
+  'common.backendOffline': 'बॅकएंडशी संपर्क नाही. खालील माहिती थेट नाही.',
+  'common.loading': 'लोड होत आहे…',
+  'common.language': 'भाषा',
+  'common.translate': 'भाषांतर करा',
+  'common.showOriginal': 'मूळ दाखवा',
+  'common.translating': 'भाषांतर होत आहे…',
+  'common.translatedNote': 'मूळ इंग्रजी विश्लेषणाचे यंत्र-भाषांतर.',
+};
+
+export const TRANSLATIONS: Record<Lang, Dict> = { en, hi, mr };
+
+/** Falls back to English, then to the key itself, so a missing string is never blank. */
+export function translate(lang: Lang, key: string): string {
+  return TRANSLATIONS[lang]?.[key] ?? TRANSLATIONS.en[key] ?? key;
+}
