@@ -1,6 +1,7 @@
 import React from 'react';
 import { IncidentClaim, MainAppPage } from '../types';
 import { PageHeader } from '../components/ui/PageHeader';
+import { useLanguage } from '../context/LanguageContext';
 import { AgentIcon } from '../components/ui/AgentIcon';
 import { NetworkGraphVisualizer } from '../components/NetworkGraphVisualizer';
 import { formatReach, severityOf, severityTone, STAGE_LABEL } from '../lib/ui';
@@ -12,13 +13,14 @@ export const InvestigationPage = ({
   currentIncident: IncidentClaim;
   setPage: (p: MainAppPage) => void;
 }) => {
+  const { t } = useLanguage();
   if (!currentIncident) return <div className="premium-card p-10 text-center text-slate-500">No incident selected.</div>;
   const sev = severityOf(currentIncident);
   const tone = severityTone(sev);
 
   return (
     <div className="space-y-8">
-      <PageHeader kicker="Case file" title="Claim Investigation" subtitle={STAGE_LABEL[currentIncident.currentStage]} />
+      <PageHeader kicker={t('inv.kicker')} title={t('inv.title')} subtitle={STAGE_LABEL[currentIncident.currentStage]} />
       <div className={`premium-card p-6 border-l-4 ${tone.border.replace('border-', 'border-l-')}`}>
         <p className="text-lg text-slate-100">“{currentIncident.claimText}”</p>
         <div className="flex flex-wrap gap-6 mt-4 text-xs font-mono text-slate-400">

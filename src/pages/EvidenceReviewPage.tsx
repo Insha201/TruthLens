@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { PageHeader } from '../components/ui/PageHeader';
+import { useLanguage } from '../context/LanguageContext';
 import {
   ClaimDomain,
   DOMAIN_LABELS,
@@ -37,8 +38,11 @@ export const EvidenceReviewPage = ({
   setPage: (p: MainAppPage) => void;
   handleReviewDecision: (id: string, approved: boolean) => void;
 }) => {
+  const { t, td } = useLanguage();
   const [search, setSearch] = useState('');
-  const [domain, setDomain] = useState<ClaimDomain | 'all'>('all');
+  // Nothing is listed until a subject is chosen: the corpus runs to well over
+  // a hundred documents and dumping them all at once is unreadable.
+  const [domain, setDomain] = useState<ClaimDomain | 'all' | null>(null);
   const [onlyUsed, setOnlyUsed] = useState(false);
   const [draft, setDraft] = useState('');
 
@@ -46,6 +50,16 @@ export const EvidenceReviewPage = ({
     setCurrentIncidentId(id);
     setPage('counter_narrative');
   };
+
+  /** Document count per subject across the whole corpus, for the chooser. */
+  const domainCounts = useMemo(() => {
+    const m = new Map<ClaimDomain, number>();
+    for (const d of evidenceStore.documents) {
+      const k = (d.domain || 'other') as ClaimDomain;
+      m.set(k, (m.get(k) || 0) + 1);
+    }
+    return m;
+  }, [evidenceStore.documents]);
 
   /** Filter + group evidence by subject domain, most-used first. */
   const grouped = useMemo(() => {
@@ -97,9 +111,9 @@ export const EvidenceReviewPage = ({
   return (
     <div className="space-y-10">
       <PageHeader
-        kicker="Verification"
-        title="Evidence & Human Review"
-        subtitle="The fact-check corpus the drafter rebuts from, grouped by subject, and every analysed claim awaiting a human decision."
+        kicker={t('ev.kicker2')}
+        title={t('ev.title2')}
+        subtitle={t('ev.subtitle2')}
       />
 
       {/* ── RAG vector store ───────────────────────────────── */}
@@ -122,23 +136,17 @@ export const EvidenceReviewPage = ({
             click through to read the counter-narrative it produced.
           </div>
 
-          {/* Filters */}
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => setDomain('all')}
-              className={`filter-chip ${domain === 'all' ? 'active' : ''}`}
-            >
-              All domains
+          {/* Filters - only meaningful once a subject has been chosen */}
+          <div className={`flex flex-wrap items-center gap-2 ${domain === null ? 'hidden' : ''}`}>
+            <button onClick={() => setDomain(null)} className="filter-chip">
+              &larr; {t('ev.backToCategories')}
             </button>
-            {DOMAIN_ORDER.map((d) => (
-              <button
-                key={d}
-                onClick={() => setDomain(d)}
-                className={`filter-chip ${domain === d ? 'active' : ''}`}
-              >
-                {DOMAIN_LABELS[d]}
-              </button>
-            ))}
+            {domain !== null && domain !== 'all' && (
+              <span className="text-xs text-slate-400">
+                {t('ev.showingFrom')}{' '}
+                <b className="text-cyan-300">{td(domain as ClaimDomain)}</b>
+              </span>
+            )}
             <label className="flex items-center gap-1.5 text-xs text-slate-400 ml-2 cursor-pointer">
               <input
                 type="checkbox"
@@ -156,7 +164,32 @@ export const EvidenceReviewPage = ({
             />
           </div>
 
-          {evidenceStore.count === 0 ? (
+          {domain === null ? (
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-sm font-bold text-slate-200">{t('ev.pickCategory')}</h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  {t('ev.pickHint').replace('{n}', String(evidenceStore.count))}
+                </p>
+              </div>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {DOMAIN_ORDER.filter((d) => (domainCounts.get(d) || 0) > 0).map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => setDomain(d)}
+                    className="text-left rounded-lg border border-slate-700 hover:border-cyan-500 bg-slate-900/40 hover:bg-cyan-950/30 p-4 transition-all group"
+                  >
+                    <div className="text-sm font-bold text-slate-100 group-hover:text-cyan-300">
+                      {td(d)}
+                    </div>
+                    <div className="text-[11px] font-mono text-slate-500 mt-1">
+                      {domainCounts.get(d)} {t('ev.docsInCategory')}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : evidenceStore.count === 0 ? (
             <div className="text-sm text-amber-300/80 border border-amber-800/50 rounded-md p-4">
               The RAG store is empty. Counter-narrative drafting will return “no evidence” until
               fact-checks are indexed below.
@@ -169,7 +202,7 @@ export const EvidenceReviewPage = ({
                 <div key={d}>
                   <div className="flex items-center gap-2 mb-3">
                     <h3 className="text-xs font-bold uppercase tracking-widest text-cyan-300">
-                      {DOMAIN_LABELS[d]}
+                      {td(d)}
                     </h3>
                     <span className="text-[10px] font-mono text-slate-600">{docs.length}</span>
                     <div className="flex-1 h-px bg-slate-800" />
@@ -267,7 +300,7 @@ export const EvidenceReviewPage = ({
               <div key={d}>
                 <div className="flex items-center gap-2 mb-3">
                   <h3 className="text-xs font-bold uppercase tracking-widest text-amber-300/80">
-                    {DOMAIN_LABELS[d]}
+                    {td(d)}
                   </h3>
                   <span className="text-[10px] font-mono text-slate-600">{claims.length}</span>
                   <div className="flex-1 h-px bg-slate-800" />

@@ -1,13 +1,12 @@
 import React from 'react';
-import { Menu, Activity, ShieldCheck, Sun, Moon } from 'lucide-react';
+import { Activity, ShieldCheck, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
 interface FeedNavbarProps {
-  onOpenMenu: () => void;
   onOpenAppView?: () => void;
 }
 
-export const FeedNavbar: React.FC<FeedNavbarProps> = ({ onOpenMenu, onOpenAppView }) => {
+export const FeedNavbar: React.FC<FeedNavbarProps> = ({ onOpenAppView }) => {
   return (
     <header className="fixed top-0 left-0 right-0 z-40 px-6 py-4 md:px-12 md:py-6 flex items-center justify-between backdrop-blur-md bg-[#0A0F1E]/60 border-b border-white/5 transition-all">
       {/* Brand Mark */}
@@ -43,15 +42,6 @@ export const FeedNavbar: React.FC<FeedNavbarProps> = ({ onOpenMenu, onOpenAppVie
             <span>Operator Dashboard</span>
           </button>
         )}
-
-        <button
-          onClick={onOpenMenu}
-          className="flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/15 hover:border-[#17C3A0] bg-white/5 hover:bg-white/10 text-[#F5F6FA] font-sans-display text-xs font-bold tracking-widest uppercase transition-all cursor-pointer group"
-          aria-label="Open menu"
-        >
-          <span className="group-hover:text-[#17C3A0] transition-colors">Menu</span>
-          <Menu size={16} className="group-hover:rotate-90 group-hover:text-[#17C3A0] transition-all" />
-        </button>
       </div>
     </header>
   );

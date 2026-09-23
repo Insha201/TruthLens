@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { ClaimDomain, DOMAIN_LABELS, DOMAIN_ORDER, IncidentClaim, MainAppPage } from '../types';
 import { PageHeader } from '../components/ui/PageHeader';
+import { useLanguage } from '../context/LanguageContext';
 import { formatReach, reviewLabel, severityOf, severityTone, STAGE_LABEL } from '../lib/ui';
 
 export const LiveClaimsPage = ({
@@ -13,6 +14,7 @@ export const LiveClaimsPage = ({
   setCurrentIncidentId: (id: string) => void;
   setPage: (p: MainAppPage) => void;
 }) => {
+  const { t, td } = useLanguage();
   const [filter, setFilter] = useState('ALL');
   const [domain, setDomain] = useState<ClaimDomain | 'all'>('all');
   const chips = ['ALL', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'NEW', 'UNDER REVIEW', 'RESOLVED'];
@@ -43,7 +45,7 @@ export const LiveClaimsPage = ({
 
   return (
     <div className="space-y-6">
-      <PageHeader kicker="Monitor" title="Live Claim Monitor" live subtitle="Incoming claims with live severity, origin, and pipeline stage." />
+      <PageHeader kicker={t('claims.kicker')} title={t('claims.title')} live subtitle={t('claims.subtitle')} />
       <div className="space-y-3">
         <div className="flex flex-wrap gap-2 items-center">
           <span className="text-[10px] uppercase tracking-widest text-slate-500 mr-1">Domain</span>
@@ -59,7 +61,7 @@ export const LiveClaimsPage = ({
               onClick={() => setDomain(d)}
               className={`filter-chip ${domain === d ? 'active' : ''}`}
             >
-              {DOMAIN_LABELS[d]} ({domainCounts.get(d)})
+              {td(d)} ({domainCounts.get(d)})
             </button>
           ))}
         </div>

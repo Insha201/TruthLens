@@ -115,6 +115,31 @@ const en: Dict = {
   'common.showOriginal': 'Show original',
   'common.translating': 'Translating…',
   'common.translatedNote': 'Machine translation of the original English analysis.',
+
+  // ── spread ──────────────────────────────────────────────────
+  'spread.kicker': 'Cascade',
+  'spread.title': 'Spread Intelligence',
+  'spread.subtitle': 'Outlets observed carrying the claim, projected susceptible clusters, and the modelled 6-hour reach.',
+
+  // ── evidence page ───────────────────────────────────────────
+  'ev.kicker2': 'Verification',
+  'ev.title2': 'Evidence & Human Review',
+  'ev.subtitle2': 'The fact-check corpus the drafter rebuts from, grouped by subject, and every analysed claim awaiting a human decision.',
+  'ev.pickCategory': 'Choose a subject to view its evidence',
+  'ev.pickHint': 'The corpus holds {n} documents. Select a subject below to see only the fact-checks filed under it.',
+  'ev.backToCategories': 'All subjects',
+  'ev.showingFrom': 'Showing evidence filed under',
+  'ev.docsInCategory': 'documents',
+  'ev.noneInCategory': 'No documents in this subject yet.',
+
+  // ── subject domains (shared by claims and evidence) ─────────
+  'domain.public_health': 'Public health',
+  'domain.elections_civic': 'Elections & civic',
+  'domain.emergency_disaster': 'Emergency & disaster',
+  'domain.financial_panic': 'Finance & markets',
+  'domain.geopolitics': 'Geopolitics',
+  'domain.science_tech': 'Science & tech',
+  'domain.other': 'Other',
 };
 
 const hi: Dict = {
@@ -206,6 +231,28 @@ const hi: Dict = {
   'common.showOriginal': 'मूल दिखाएँ',
   'common.translating': 'अनुवाद हो रहा है…',
   'common.translatedNote': 'मूल अंग्रेज़ी विश्लेषण का मशीनी अनुवाद।',
+
+  'spread.kicker': 'प्रसार शृंखला',
+  'spread.title': 'प्रसार आसूचना',
+  'spread.subtitle': 'दावा ले जाने वाले स्रोत, संभावित प्रभावित समूह और 6 घंटे की अनुमानित पहुँच।',
+
+  'ev.kicker2': 'सत्यापन',
+  'ev.title2': 'प्रमाण एवं मानव समीक्षा',
+  'ev.subtitle2': 'वह तथ्य-जाँच संग्रह जिससे प्रति-कथन लिखा जाता है, विषय अनुसार समूहित, तथा मानव निर्णय की प्रतीक्षा में दावे।',
+  'ev.pickCategory': 'प्रमाण देखने के लिए विषय चुनें',
+  'ev.pickHint': 'संग्रह में {n} दस्तावेज़ हैं। नीचे से कोई विषय चुनें ताकि केवल उसी की तथ्य-जाँच दिखे।',
+  'ev.backToCategories': 'सभी विषय',
+  'ev.showingFrom': 'इस विषय के अंतर्गत प्रमाण',
+  'ev.docsInCategory': 'दस्तावेज़',
+  'ev.noneInCategory': 'इस विषय में अभी कोई दस्तावेज़ नहीं।',
+
+  'domain.public_health': 'सार्वजनिक स्वास्थ्य',
+  'domain.elections_civic': 'चुनाव एवं नागरिक',
+  'domain.emergency_disaster': 'आपदा एवं आपातकाल',
+  'domain.financial_panic': 'वित्त एवं बाज़ार',
+  'domain.geopolitics': 'भू-राजनीति',
+  'domain.science_tech': 'विज्ञान एवं प्रौद्योगिकी',
+  'domain.other': 'अन्य',
 };
 
 const mr: Dict = {
@@ -297,6 +344,28 @@ const mr: Dict = {
   'common.showOriginal': 'मूळ दाखवा',
   'common.translating': 'भाषांतर होत आहे…',
   'common.translatedNote': 'मूळ इंग्रजी विश्लेषणाचे यंत्र-भाषांतर.',
+
+  'spread.kicker': 'प्रसार साखळी',
+  'spread.title': 'प्रसार गुप्तवार्ता',
+  'spread.subtitle': 'दावा वाहून नेणारे स्रोत, संभाव्य प्रभावित गट आणि ६ तासांतील अंदाजित पोहोच.',
+
+  'ev.kicker2': 'पडताळणी',
+  'ev.title2': 'पुरावा आणि मानवी पुनरावलोकन',
+  'ev.subtitle2': 'प्रति-कथन ज्या तथ्य-तपासणी संग्रहातून लिहिले जाते तो संग्रह, विषयानुसार गटबद्ध, आणि मानवी निर्णयाच्या प्रतीक्षेतील दावे.',
+  'ev.pickCategory': 'पुरावा पाहण्यासाठी विषय निवडा',
+  'ev.pickHint': 'संग्रहात {n} कागदपत्रे आहेत. खालून विषय निवडा म्हणजे त्याचाच पुरावा दिसेल.',
+  'ev.backToCategories': 'सर्व विषय',
+  'ev.showingFrom': 'या विषयाखालील पुरावा',
+  'ev.docsInCategory': 'कागदपत्रे',
+  'ev.noneInCategory': 'या विषयात अद्याप कागदपत्रे नाहीत.',
+
+  'domain.public_health': 'सार्वजनिक आरोग्य',
+  'domain.elections_civic': 'निवडणूक व नागरी',
+  'domain.emergency_disaster': 'आपत्ती व आणीबाणी',
+  'domain.financial_panic': 'वित्त व बाजार',
+  'domain.geopolitics': 'भू-राजकारण',
+  'domain.science_tech': 'विज्ञान व तंत्रज्ञान',
+  'domain.other': 'इतर',
 };
 
 export const TRANSLATIONS: Record<Lang, Dict> = { en, hi, mr };

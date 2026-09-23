@@ -1,6 +1,7 @@
 import React from 'react';
 import { NetworkGraphVisualizer } from '../components/NetworkGraphVisualizer';
 import { PageHeader } from '../components/ui/PageHeader';
+import { useLanguage } from '../context/LanguageContext';
 import { IncidentClaim } from '../types';
 import { formatReach } from '../lib/ui';
 
@@ -11,14 +12,15 @@ const riskBand = (r0?: number) => {
 };
 
 export const SpreadIntelligencePage = ({ currentIncident }: { currentIncident: IncidentClaim }) => {
+  const { t } = useLanguage();
   const spread = currentIncident?.spread;
 
   return (
     <div className="space-y-6">
       <PageHeader
-        kicker="Cascade"
-        title="Spread Intelligence"
-        subtitle="Outlets observed carrying the claim, projected susceptible clusters, and the modelled 6-hour reach."
+        kicker={t('spread.kicker')}
+        title={t('spread.title')}
+        subtitle={t('spread.subtitle')}
       />
       <div className="grid xl:grid-cols-[1fr_260px] gap-6">
         <div className="premium-card p-4 min-h-[540px]">

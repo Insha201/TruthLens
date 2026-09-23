@@ -6,6 +6,8 @@ interface LanguageContextType {
   setLang: (l: Lang) => void;
   /** Look up a UI string in the active language. */
   t: (key: string) => string;
+  /** Subject-domain label in the active language. */
+  td: (domain: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -34,9 +36,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const t = (key: string) => translate(lang, key);
+  const td = (domain: string) => translate(lang, `domain.${domain || 'other'}`);
 
   return (
-    <LanguageContext.Provider value={{ lang, setLang, t }}>{children}</LanguageContext.Provider>
+    <LanguageContext.Provider value={{ lang, setLang, t, td }}>{children}</LanguageContext.Provider>
   );
 };
 
@@ -44,7 +47,12 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 export const useLanguage = (): LanguageContextType => {
   const ctx = useContext(LanguageContext);
   if (!ctx) {
-    return { lang: 'en', setLang: () => {}, t: (key: string) => translate('en', key) };
+    return {
+      lang: 'en',
+      setLang: () => {},
+      t: (key: string) => translate('en', key),
+      td: (domain: string) => translate('en', `domain.${domain || 'other'}`),
+    };
   }
   return ctx;
 };

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ParticleBackground } from '../components/ParticleBackground';
 import { FeedNavbar } from '../components/FeedNavbar';
-import { OverlayNav } from '../components/OverlayNav';
 
 import { HeroSection } from '../components/sections/HeroSection';
 import { ProblemSection } from '../components/sections/ProblemSection';
@@ -35,19 +34,8 @@ export const HomePage: React.FC<HomePageProps> = ({ setPage }) => {
       {/* Living Generative Particle Canvas Background */}
       <ParticleBackground />
 
-      {/* Overlay Navigation Menu */}
-      <OverlayNav
-        isOpen={isOverlayOpen}
-        onClose={() => setIsOverlayOpen(false)}
-        onNavigate={scrollToSection}
-        onOpenAppView={() => setPage('dashboard')}
-      />
-
       {/* Fixed Slim Feed Navbar */}
-      <FeedNavbar
-        onOpenMenu={() => setIsOverlayOpen(true)}
-        onOpenAppView={() => setPage('dashboard')}
-      />
+      <FeedNavbar onOpenAppView={() => setPage('dashboard')} />
 
       {/* 11 Full-Viewport Scroll Chapters */}
       <main className="relative z-10">
