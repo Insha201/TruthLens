@@ -42,7 +42,11 @@ import os
 
 import chromadb
 
-client = chromadb.PersistentClient(path="./chroma_db")
+client = chromadb.PersistentClient(
+    # Configurable so a container can point this at a mounted volume.
+    # Defaults to the original relative path for local development.
+    path=os.getenv("CHROMA_PATH", "./chroma_db")
+)
 
 # Separate from the evidence collection - these are claims, not fact-checks.
 claim_collection = client.get_or_create_collection(name="claim_index")

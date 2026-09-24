@@ -4,7 +4,9 @@ import chromadb
 
 
 client = chromadb.PersistentClient(
-    path="./chroma_db"
+    # Configurable so a container can point this at a mounted volume.
+    # Defaults to the original relative path for local development.
+    path=os.getenv("CHROMA_PATH", "./chroma_db")
 )
 
 

@@ -1,0 +1,6 @@
+# Shell scripts and container files must keep LF endings. Git on Windows
+# would otherwise check start.sh out with CRLF, and bash inside the Linux
+# image fails with: /usr/bin/env: bash\r: No such file or directory
+*.sh text eol=lf
+Dockerfile text eol=lf
+.dockerignore text eol=lf
