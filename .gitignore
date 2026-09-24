@@ -35,3 +35,6 @@ ui_doc_extracted/
 setup_*.cjs
 setup_*.js
 truthlens-site/
+
+# Staging folder for the Hugging Face Static Space (built artefact)
+hf-static/
