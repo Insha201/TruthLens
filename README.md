@@ -236,6 +236,5 @@ server.ts        Express backend-for-frontend adapter
 
 ## Team
 
-Built by **Hajra Khan**, **Insha Ansari**, **Shifa Shaikh** and **Bushra Kazi**
-at M.H. Saboo Siddik College of Engineering, under the guidance of **Mr. Suraj Chopade**,
-as part of the AI Career for Women (AICW) programme.
+Built by **Hajra Khan**, **Shifa Shaikh** and **Bushra Kazi**
+at M.H. Saboo Siddik College of Engineering
